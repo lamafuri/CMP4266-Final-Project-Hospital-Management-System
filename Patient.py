@@ -12,20 +12,24 @@ class Patient:
         """
 
         #ToDo1
+        self.__first_name = first_name
+        self.__surname = surname
+        self.__age = age
+        self.__mobile = mobile
+        self.__postcode = postcode
+        
         pass
         self.__doctor = 'None'
        
-
-    
     def full_name(self) :
         """full name is first_name and surname"""
         #ToDo2
-        pass
+        return self.__first_name + self.__surname
 
 
     def get_doctor(self) :
         #ToDo3
-        pass
+        return self.__doctor
 
     def link(self, doctor):
         """Args: doctor(string): the doctor full name"""
@@ -34,6 +38,7 @@ class Patient:
     def print_symptoms(self):
         """prints all the symptoms"""
         #ToDo4
+
         pass
 
     def __str__(self):
