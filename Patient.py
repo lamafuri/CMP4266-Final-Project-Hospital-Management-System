@@ -22,7 +22,7 @@ class Patient:
     def full_name(self) :
         """full name is first_name and surname"""
         #ToDo2
-        return self.__first_name + self.__surname
+        return f"{self.__first_name} {self.__surname}"
 
 
     def get_doctor(self) :
@@ -31,7 +31,7 @@ class Patient:
 
     def link(self, doctor):
         """Args: doctor(string): the doctor full name"""
-        self.__doctor = doctor
+        self.__doctor = doctor.full_name()
 
     def print_symptoms(self):
         """prints all the symptoms"""
