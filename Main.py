@@ -2,7 +2,7 @@
 from Admin import Admin
 from Doctor import Doctor
 from Patient import Patient
-
+from utility_functions import load_doctors_data , load_patients_data , load_discharged_patients_data
 def main():
     """
     the main function to be ran when the program runs
@@ -10,17 +10,24 @@ def main():
 
     # Initialising the actors
     admin = Admin('admin','123','B1 1AB') # username is 'admin', password is '123'
-    doctors = [Doctor('John','Smith','Internal Med.'), Doctor('Jone','Smith','Pediatrics'), Doctor('Jone','Carlos','Cardiology')]
-    patients = [Patient('Sara','Smith', 20, '07012345678','B1 234'), Patient('Mike','Jones', 37,'07555551234','L2 2AB'), Patient('Daivd','Smith', 15, '07123456789','C1 ABC')]
-    discharged_patients = []
+    # doctors = [Doctor('John','Smith','Internal Med.'), Doctor('Jone','Smith','Pediatrics'), Doctor('Jone','Carlos','Cardiology')]
+    doctors = load_doctors_data()
+    # patients = [Patient('Sara','Smith', 20, '07012345678','B1 234'), Patient('Mike','Jones', 37,'07555551234','L2 2AB'), Patient('Daivd','Smith', 15, '07123456789','C1 ABC')]
+    patients = load_patients_data()
+    # discharged_patients = []
+    discharged_patients = load_discharged_patients_data()
 
     # keep trying to login tell the login details are correct
     while True:
-        if admin.login():
-            running = True # allow the program to run
-            break
+        # Successful login only if there was no exception raised
+        try:
+            admin.login()
+        except Exception as e:
+            print(e)
         else:
-            print('Incorrect username or password.')
+            running = True #allow the program to run
+            break
+
 
     while running:
         # print the menu
@@ -37,20 +44,19 @@ def main():
 
         if op == '1':
             # 1- Register/view/update/delete doctor
-         #ToDo1
-          pass
+            #ToDo1
+            admin.doctor_management(doctors)
 
         elif op == '2':
-            # 2- View or discharge patients
+            # 2- View and discharge patients
             #ToDo2
-            pass
-
+            admin.view_patient(patients)
             while True:
                 op = input('Do you want to discharge a patient(Y/N):').lower()
 
                 if op == 'yes' or op == 'y':
                     #ToDo3
-                    pass
+                    admin.discharge(patients , discharged_patients)
 
                 elif op == 'no' or op == 'n':
                     break
@@ -62,7 +68,7 @@ def main():
         elif op == '3':
             # 3 - view discharged patients
             #ToDo4
-            pass
+            admin.view_patient(patients)
 
         elif op == '4':
             # 4- Assign doctor to a patient
@@ -75,7 +81,8 @@ def main():
         elif op == '6':
             # 6 - Quit
             #ToDo5
-            pass
+            print("Exited Successfully !")
+            break
 
         else:
             # the user did not enter an option that exists in the menu
