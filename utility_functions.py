@@ -1,4 +1,5 @@
-
+from Doctor import Doctor
+from Patient import Patient
 def update_file(objects_list , filename):
     folder_name = './Data/'
     """Function to update the text file entirely"""
@@ -9,4 +10,47 @@ def update_file(objects_list , filename):
     except Exception as e:
         print("Save Error :",e)
 
+def load_doctors_data():
+    """Load all the information saved in docotor.txt and return list of Doctor objects"""
+    doctors = []
+    try:
+        with open('./Data/doctor.txt','r') as file:
+            row = file.readline()
+            while row:
+                list_of_row_values = row.split(',')
+                first_name , surname , speciality = list_of_row_values
+                doctors.append(Doctor(first_name , surname , speciality))
+                row = file.readline()
 
+    except Exception as e:
+        print("Error Loading docotor data \n    Error : ",e)
+
+    else:
+        return doctors
+    
+def load_patients_data():
+    """Load all the information saved in patient.txt and return list of Patient objects"""
+    patients = []
+    try:
+        with open('./Data/patient.txt','r') as file:
+            row = file.readline()
+            while row:
+                list_of_row_values = row.split(',')
+                first_name , surname , age , mobile , postcode , _ = list_of_row_values
+                patients.append(Patient(first_name , surname , age , mobile , postcode))
+                row = file.readline()
+
+    except Exception as e:
+        print("Error Loading docotor data \n    Error : ",e)
+
+    else:
+        return patients
+
+
+
+if __name__ =='__main__':
+    x = load_patients_data()
+    print(x)
+    for a in x:
+        print(a.full_name())
+   
