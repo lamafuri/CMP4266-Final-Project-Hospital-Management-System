@@ -31,8 +31,7 @@ class Admin:
         """
         A method that deals with the login
         Raises:
-            Exception: returned when the username and the password ...
-                    ... don`t match the data registered
+            Exception: returned when the username and the password don`t match the data registered
         Returns:
             string: the username
         """

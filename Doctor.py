@@ -52,4 +52,4 @@ class Doctor:
         return f"{self.__first_name},{self.__surname},{self.__speciality}"
 
     def __str__(self) :
-        return f'{self.full_name():^30}|{self.__speciality:^15}'
+        return f'{self.full_name():^30}|{self.__speciality:<15}'
