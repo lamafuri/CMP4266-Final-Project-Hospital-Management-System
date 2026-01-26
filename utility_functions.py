@@ -19,7 +19,7 @@ def load_doctors_data():
             while row:
                 list_of_row_values = row.split(',')
                 first_name , surname , speciality = list_of_row_values
-                doctors.append(Doctor(first_name , surname , speciality))
+                doctors.append(Doctor(first_name , surname , speciality.strip()))
                 row = file.readline()
 
     except Exception as e:
@@ -41,10 +41,28 @@ def load_patients_data():
                 row = file.readline()
 
     except Exception as e:
-        print("Error Loading docotor data \n    Error : ",e)
+        print("Error Loading patients data \n    Error : ",e)
 
     else:
         return patients
+    
+def load_discharged_patients_data():
+    """Load all the information saved in discharged_patient.txt and return list of Patient objects"""
+    discharged_patients = []
+    try:
+        with open('./Data/discharged_patient.txt','r') as file:
+            row = file.readline()
+            while row:
+                list_of_row_values = row.split(',')
+                first_name , surname , age , mobile , postcode , _ = list_of_row_values
+                discharged_patients.append(Patient(first_name , surname , age , mobile , postcode))
+                row = file.readline()
+
+    except Exception as e:
+        print("Error Loading discharged patients data \n    Error : ",e)
+
+    else:
+        return discharged_patients
 
 
 
