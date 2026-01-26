@@ -112,7 +112,7 @@ class Admin:
                 new_doctor = Doctor(first_name , surname , speciality)
                 try:
                     with open('./Data/doctor.txt' ,'a') as file:
-                        file.write(new_doctor.to_csv_format())
+                        file.write(new_doctor.to_csv_format()+'\n')
                 except Exception as e:
                     print("Error appending new doctor to doctor.txt \nError: ",e)
                 else:
@@ -326,9 +326,9 @@ class Admin:
 
 if __name__ =='__main__': 
     my = Admin('a','123','salleri')
-    # my.doctor_management([Doctor("Furi","Lama","Surgeon")])
-    my.view_patient([Patient("Furi","Lama",18, "9749214495","22334")])
+    my.doctor_management([Doctor("Furi","Lama","Surgeon")])
+    # my.view_patient([Patient("Furi","Lama",18, "9749214495","22334")])
     # my.assign_doctor_to_patient([Patient("Furi","Lama",18, "9749214495","22334")] ,[Doctor("Furi","Lama","Surgeon")] )
     # my.discharge([Patient("Furi","Lama",18, "9749214495","22334")] , [])
-    my.update_details()
+    # my.update_details()
 
