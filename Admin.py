@@ -188,6 +188,17 @@ class Admin:
         else:
             print('Invalid operation choosen. Check your spelling!')
 
+    def admit_patient(self , patients):
+        print("------- Admit Patient -------")
+        print("Enter Patient's Details")
+        first_name = input("Enter patient's first name: ")
+        surname = input("Enter patient's surname: ")
+        age = int(input("Enter the patient's age: "))
+        mobile = input("Enter the patient's mobile number: ")
+        postcode = input("Enter the patient's address post code: ")
+        new_patient = Patient(first_name , surname , age , mobile , postcode)
+        patients.append(new_patient)
+        update_file(patients ,'patient.txt')
 
     def view_patient(self, patients):
         """

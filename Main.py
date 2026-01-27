@@ -33,7 +33,7 @@ def main():
         # print the menu
         print('Choose the operation:')
         print(' 1- Register/view/update/delete doctor')
-        print(' 2- Discharge patients')
+        print(' 2- Admit/View/Discharge Patients')
         print(' 3- View discharged patient')
         print(' 4- Assign doctor to a patient')
         print(' 5- Update admin detais')
@@ -48,23 +48,32 @@ def main():
             admin.doctor_management(doctors)
 
         elif op == '2':
-            # 2- View and discharge patients
+            # 2- Admit / View / discharge patients
             #ToDo2
-            admin.view_patient(patients)
-            while True:
-                op = input('Do you want to discharge a patient(Y/N):').lower()
+            print("    1. Admit new Patient\n    2. View Patients\n    3. Discharge Patient")
+            operation = input("Enter the operation : ")
+            if operation == '1':
+                admin.admit_patient(patients)
+            elif operation == '2':
+                admin.view_patient(patients)
+            
+            elif operation == '3':
+                while True:
+                    op = input('Do you want to discharge a patient(Y/N):').lower()
 
-                if op == 'yes' or op == 'y':
-                    #ToDo3
-                    admin.discharge(patients , discharged_patients)
+                    if op == 'yes' or op == 'y':
+                        #ToDo3
+                        admin.view_patient(patients)
+                        admin.discharge(patients , discharged_patients)
 
-                elif op == 'no' or op == 'n':
-                    break
+                    elif op == 'no' or op == 'n':
+                        break
 
-                # unexpected entry
-                else:
-                    print('Please answer by yes or no.')
-        
+                    # unexpected entry
+                    else:
+                        print('Please answer by yes or no.')
+            else:
+                print("Invalid Operation ! 1,2,3 are only valid")
         elif op == '3':
             # 3 - view discharged patients
             #ToDo4
