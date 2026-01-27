@@ -1,10 +1,13 @@
 John,Smith,General Practitioner
 Aisha,Patel,Internal Medicine
-Michael,Brown,Cardiology
-Sarah,Lewis,Dermatology
 Ahmed,Khan,Neurology
-Emma,Green,Pediatrics
-David,Wilson,Orthopedics
 Priya,Sharma,Endocrinology
 Robert,Clark,Psychiatry
 Laura,Robertson,Gynecology
+Michael,Adams,General Practitioner
+Sarah,Collins,Internal Medicine
+James,Patel,Cardiology
+Rebecca,Khan,Dermatology
+David,Wilson,Orthopedics
+Emma,Roberts,Pediatrics
+Thomas,Green,Endocrinology
