@@ -1,4 +1,5 @@
-class Patient:
+from Person import Person
+class Patient(Person):
     """Patient class"""
 
     def __init__(self, first_name, surname, age, mobile, postcode):
@@ -12,18 +13,11 @@ class Patient:
         """
 
         #ToDo1
-        self.__first_name = first_name
-        self.__surname = surname
+        super().__init__(first_name , surname)
         self.__age = age
         self.__mobile = mobile
         self.__postcode = postcode
         self.__doctor = 'None'
-       
-    def full_name(self) :
-        """full name is first_name and surname"""
-        #ToDo2
-        return f"{self.__first_name} {self.__surname}"
-
 
     def get_doctor(self) :
         #ToDo3
