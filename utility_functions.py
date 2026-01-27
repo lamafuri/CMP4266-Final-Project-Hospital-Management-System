@@ -29,8 +29,10 @@ def load_doctors_data():
         return doctors
     
 def load_patients_data():
-    """Load all the information saved in patient.txt and return list of Patient objects"""
+    """Load all the information saved in patient.txt and return list of Patient Object and dictionary representated as a family name : patients list"""
     patients = []
+    grouped_patients = {}
+
     try:
         with open('./Data/patient.txt','r') as file:
             row = file.readline()
@@ -40,13 +42,16 @@ def load_patients_data():
                 current_patient = Patient(first_name , surname , age , mobile , postcode)
                 current_patient.link(doctor_full_name.strip())
                 patients.append(current_patient)
+                surname = current_patient.get_surname()
+                grouped_patients.setdefault(surname,[]).append(current_patient)
                 row = file.readline()
 
     except Exception as e:
         print("Error Loading patients data \n    Error : ",e)
 
     else:
-        return patients
+        print(len(grouped_patients))
+        return patients , grouped_patients
     
 def load_discharged_patients_data():
     """Load all the information saved in discharged_patient.txt and return list of Patient objects"""
@@ -56,8 +61,10 @@ def load_discharged_patients_data():
             row = file.readline()
             while row:
                 list_of_row_values = row.split(',')
-                first_name , surname , age , mobile , postcode , _ = list_of_row_values
-                discharged_patients.append(Patient(first_name , surname , age , mobile , postcode))
+                first_name , surname , age , mobile , postcode , doctor_full_name = list_of_row_values
+                current_patient = Patient(first_name , surname , age , mobile , postcode)
+                current_patient.link(doctor_full_name.strip())
+                discharged_patients.append(current_patient)
                 row = file.readline()
 
     except Exception as e:
@@ -71,6 +78,4 @@ def load_discharged_patients_data():
 if __name__ =='__main__':
     x = load_patients_data()
     print(x)
-    for a in x:
-        print(a.full_name())
    
