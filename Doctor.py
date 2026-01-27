@@ -29,7 +29,7 @@ class Doctor(Person):
     # For saving to a text file
     def to_csv_format(self):
         """First Name,Surname , Speciality"""
-        return f"{self.__first_name},{self.__surname},{self.__speciality}"
+        return f"{self.get_first_name()},{self.get_surname()},{self.__speciality}"
 
     def __str__(self) :
         return f'{self.full_name():^30}|{self.__speciality:<15}'
