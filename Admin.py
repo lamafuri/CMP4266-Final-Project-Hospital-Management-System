@@ -279,6 +279,7 @@ class Admin:
             discharged_patients.append(discharged_one)
             update_file(patients , 'patient.txt')
             update_file(discharged_patients , 'discharged_patient.txt')
+            print(f"{discharged_one.full_name()} was discharged")
 
     def view_discharge(self, discharged_patients):
         """
