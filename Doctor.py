@@ -26,6 +26,17 @@ class Doctor(Person):
     def add_patient(self, patient):
         self.__patients.append(patient)
 
+    def remove_patient(self , patient):
+        for pat in self.__patients:
+            print(pat is patient)
+            if pat is patient:
+                self.__patients.remove(pat)
+                print(f"{pat.full_name()} is removed from {self.full_name()}")
+                break
+    
+    def get_patients(self):
+        return self.__patients
+    
     # For saving to a text file
     def to_csv_format(self):
         """First Name,Surname , Speciality"""
