@@ -73,6 +73,12 @@ def load_discharged_patients_data():
     else:
         return discharged_patients
 
+def update_patients_list_in_doctor(doctor_by_name , patients):
+    for patient in patients:
+        doctor_name = patient.get_doctor()
+        if(doctor_name != 'None' and doctor_name in doctor_by_name):
+            doctor = doctor_by_name[doctor_name]
+            doctor.add_patient(patient)
 
 
 if __name__ =='__main__':

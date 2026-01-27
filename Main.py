@@ -2,7 +2,7 @@
 from Admin import Admin
 from Doctor import Doctor
 from Patient import Patient
-from utility_functions import load_doctors_data , load_patients_data , load_discharged_patients_data
+from utility_functions import load_doctors_data , load_patients_data , load_discharged_patients_data , update_patients_list_in_doctor
 def main():
     """
     the main function to be ran when the program runs
@@ -16,6 +16,9 @@ def main():
     patients , grouped_patients = load_patients_data()
     # discharged_patients = []
     discharged_patients = load_discharged_patients_data()
+
+    doctor_by_name = {doctor.full_name(): doctor for doctor in doctors}
+    update_patients_list_in_doctor(doctor_by_name , patients)
 
     # keep trying to login tell the login details are correct
     while True:
@@ -36,8 +39,9 @@ def main():
         print(' 2- Admit/View/Discharge Patients')
         print(' 3- View discharged patient')
         print(' 4- Assign doctor to a patient')
-        print(' 5- Update admin detais')
-        print(' 6- Quit')
+        print(' 5- Reallocate Doctor to Patient')
+        print(' 6- Update admin detais')
+        print(' 7- Quit')
 
         # get the option
         op = input('Option: ')
@@ -84,11 +88,15 @@ def main():
             admin.assign_doctor_to_patient(patients, doctors)
 
         elif op == '5':
-            # 5- Update admin detais
-            admin.update_details()
+            #5 - Reallocated Doctor to Patient with the same function
+            admin.reallocate_doctor_to_patient(patients , doctors)
 
         elif op == '6':
-            # 6 - Quit
+            # 6- Update admin detais
+            admin.update_details()
+
+        elif op == '7':
+            # 7 - Quit
             #ToDo5
             print("Exited Successfully !")
             break
