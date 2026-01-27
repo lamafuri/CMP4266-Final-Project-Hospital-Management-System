@@ -246,7 +246,7 @@ class Admin:
                     
                 # link the patients to the doctor and vice versa
                 #ToDo11
-                patients[patient_index].link(doctors[doctor_index])                
+                patients[patient_index].link(doctors[doctor_index].full_name())                
                 print('The patient is now assign to the doctor.')
                 update_file(patients , 'patient.txt')
 

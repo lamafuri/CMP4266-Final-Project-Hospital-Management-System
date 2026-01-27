@@ -36,8 +36,10 @@ def load_patients_data():
             row = file.readline()
             while row:
                 list_of_row_values = row.split(',')
-                first_name , surname , age , mobile , postcode , _ = list_of_row_values
-                patients.append(Patient(first_name , surname , age , mobile , postcode))
+                first_name , surname , age , mobile , postcode , doctor_full_name = list_of_row_values
+                current_patient = Patient(first_name , surname , age , mobile , postcode)
+                current_patient.link(doctor_full_name.strip())
+                patients.append(current_patient)
                 row = file.readline()
 
     except Exception as e:
