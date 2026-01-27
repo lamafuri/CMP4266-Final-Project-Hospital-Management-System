@@ -68,7 +68,7 @@ def main():
         elif op == '3':
             # 3 - view discharged patients
             #ToDo4
-            admin.view_patient(patients)
+            admin.view_patient(discharged_patients)
 
         elif op == '4':
             # 4- Assign doctor to a patient
