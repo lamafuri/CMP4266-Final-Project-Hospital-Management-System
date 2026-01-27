@@ -257,7 +257,8 @@ class Admin:
                     
                 # link the patients to the doctor and vice versa
                 #ToDo11
-                patients[patient_index].link(doctors[doctor_index].full_name())                
+                patients[patient_index].link(doctors[doctor_index].full_name())
+                doctors[doctor_index].add_patient(patients[patient_index])                
                 print('The patient is now assign to the doctor.')
                 update_file(patients , 'patient.txt')
 
@@ -268,6 +269,70 @@ class Admin:
         except ValueError: # the entered id could not be changed into an in
             print('The id entered is incorrect')
 
+    def reallocate_doctor_to_patient(self, patients, doctors):
+        """
+        Allow the admin to reallocate a new doctor to a patient
+        Args:
+            patients (list<Patients>): the list of all the active patients
+            doctors (list<Doctor>): the list of all the doctors
+        """
+        print("-----Reallocate new Doctor to Patient-----")
+
+        print("-----Patients-----")
+        print('ID |          Full Name           |      Doctor`s Full Name      | Age |    Mobile     | Postcode ')
+        self.view(patients)
+
+        patient_index = input('Please enter the patient ID whose doctor is to be changed: ')
+
+        try:
+            # patient_index is the patient ID mines one (-1)
+            patient_index = int(patient_index) -1
+
+            # check if the id is not in the list of patients
+            if patient_index not in range(len(patients)):
+                print('The id entered was not found.')
+                return # stop the procedures
+
+        except ValueError: # the entered id could not be changed into an int
+            print('The id entered is incorrect')
+            return # stop the procedures
+
+        print("-----Select new Doctor-----")
+        print('Select new doctor that fits these symptoms:')
+        patients[patient_index].print_symptoms() # print the patient symptoms
+
+        print('--------------------------------------------------')
+        print('ID |          Full Name           |  Speciality   ')
+        self.view(doctors)
+        doctor_index = input('Please enter the new doctor ID: ')
+
+        try:
+            # doctor_index is the patient ID mines one (-1)
+            doctor_index = int(doctor_index) -1
+
+            # check if the id is in the list of doctors
+            if self.find_index(doctor_index,doctors)!=False:
+                    
+                # link the patients to the doctor and vice versa
+                #ToDo11
+                previous_doctor_name = patients[patient_index].get_doctor()
+                
+                for doctor in doctors:
+                    if doctor.full_name() == previous_doctor_name:
+                        previous_doctor = doctor
+                        previous_doctor.remove_patient(patients[patient_index])
+                        break
+                patients[patient_index].link(doctors[doctor_index].full_name())
+                doctors[doctor_index].add_patient(patients[patient_index])
+
+                update_file(patients , 'patient.txt')
+
+            # if the id is not in the list of doctors
+            else:
+                print('The id entered for doctor was not found.')
+
+        except ValueError: # the entered id could not be changed into an in
+            print('The id entered is incorrect')
 
     def discharge(self, patients, discharged_patients):
         """
@@ -303,7 +368,7 @@ class Admin:
         print('ID |          Full Name           |      Doctor`s Full Name      | Age |    Mobile     | Postcode ')
         #ToDo13
         self.view(discharged_patients)
-
+    
     def update_details(self):
         """
         Allows the user to update and change username, password and address
