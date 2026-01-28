@@ -40,8 +40,9 @@ def main():
         print(' 3- View discharged patient')
         print(' 4- Assign doctor to a patient')
         print(' 5- Reallocate Doctor to Patient')
-        print(' 6- Update admin detais')
-        print(' 7- Quit')
+        print(' 6- View Management Report')
+        print(' 7- Update admin detais')
+        print(' 8- Quit')
 
         # get the option
         op = input('Option: ')
@@ -92,11 +93,14 @@ def main():
             admin.reallocate_doctor_to_patient(patients , doctors)
 
         elif op == '6':
-            # 6- Update admin detais
+            #6 - View Management Report
+            admin.management_reports(doctors)
+        elif op == '7':
+            # 7- Update admin detais
             admin.update_details()
 
-        elif op == '7':
-            # 7 - Quit
+        elif op == '8':
+            # 8 - Quit
             #ToDo5
             print("Exited Successfully !")
             break

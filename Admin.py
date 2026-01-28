@@ -400,6 +400,27 @@ class Admin:
             #ToDo16
             print("Invalid operation! Please enter a valid operation")
 
+    def management_reports(self , doctors):
+        print("\t1. View total number of Doctors")
+        print("\t2. View total number of Patients per Doctor")
+        print("\t3. View total number of appointments per Dcotor")
+        print("\t4. View total number of Patients based on illness types")
+        op = input("Enter the operation (1,2,3,4): ")
+        if(op == '1'):
+            print("Total Number of doctor : ",len(doctors))
+        elif op == '2':
+            print("-----Total Number of Patient's per Doctor-----")
+            for doctor in doctors:
+                print(f"\t{doctor.full_name()} has : {len(doctor.get_patients())} patients")
+        elif op == '3':
+            # appointent per doctor
+            pass
+        elif op == '4':
+            # Patient based on illness
+            pass
+        else:
+            print("Ivalid Input ! Enter 1 ,2 ,3 or 4")
+
 if __name__ =='__main__': 
     my = Admin('a','123','salleri')
     my.doctor_management([Doctor("Furi","Lama","Surgeon")])
