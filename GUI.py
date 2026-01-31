@@ -58,6 +58,7 @@ class HospitalGUI:
         try:
             self.admin.login(username, password)  # Use modified login that takes params
             self.load_data()
+            self.show_main_menu()
         except Exception as e:
             messagebox.showerror("Login Failed", str(e))
 
@@ -69,6 +70,21 @@ class HospitalGUI:
         doctor_by_name = {doctor.full_name(): doctor for doctor in self.doctors}
         update_patients_list_in_doctor(doctor_by_name, self.patients)
 
+    def show_main_menu(self):
+        self.clear_frame()
+
+        tk.Label(self.current_frame, text=f"Welcome, {self.admin.get_username()}", font=("Helvetica", 18, "bold")).pack(pady=15)
+
+        btn_style = {"font": ("Helvetica", 12), "width": 35, "pady": 10}
+
+        tk.Button(self.current_frame, text="1. Doctor Management", **btn_style).pack(pady=8)
+        tk.Button(self.current_frame, text="2. Patient Management", **btn_style).pack(pady=8)
+        tk.Button(self.current_frame, text="3. View Discharged Patients", **btn_style).pack(pady=8)
+        tk.Button(self.current_frame, text="4. Assign Doctor to Patient", **btn_style).pack(pady=8)
+        tk.Button(self.current_frame, text="5. Reallocate Doctor to Patient", **btn_style).pack(pady=8)
+        tk.Button(self.current_frame, text="6. View Management Reports", **btn_style).pack(pady=8)
+        tk.Button(self.current_frame, text="7. Update Admin Details", **btn_style).pack(pady=8)
+        tk.Button(self.current_frame, text="8. Quit", bg="#f44336", fg="white",font=("Helvetica", 12, "bold"), width=35, pady=10).pack(pady=30)
 if __name__ == "__main__":
     root = tk.Tk()
     app = HospitalGUI(root)

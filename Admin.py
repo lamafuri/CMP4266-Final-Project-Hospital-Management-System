@@ -16,7 +16,8 @@ class Admin:
         self.__username = username
         self.__password = password
         self.__address =  address
-
+    def get_username(self):
+        return self.__username
     def view(self,a_list):
         """
         print a list
