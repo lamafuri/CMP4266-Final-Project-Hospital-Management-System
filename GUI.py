@@ -58,10 +58,16 @@ class HospitalGUI:
         try:
             self.admin.login(username, password)  # Use modified login that takes params
             self.load_data()
-            self.show_main_menu()
         except Exception as e:
             messagebox.showerror("Login Failed", str(e))
 
+    def load_data(self):
+        self.doctors = load_doctors_data()
+        self.patients, self.grouped_patients = load_patients_data()
+        self.discharged_patients = load_discharged_patients_data()
+
+        doctor_by_name = {doctor.full_name(): doctor for doctor in self.doctors}
+        update_patients_list_in_doctor(doctor_by_name, self.patients)
 
 if __name__ == "__main__":
     root = tk.Tk()
