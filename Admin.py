@@ -27,7 +27,7 @@ class Admin:
         for index, item in enumerate(a_list):
             print(f'{index+1:<3}|{item}')
 
-    def login(self) :
+    def login(self ,username="" ,password="") :
         """
         A method that deals with the login
         Raises:
@@ -38,10 +38,10 @@ class Admin:
     
         print("-----Login-----")
         #Get the details of the admin
-
-        username = input('Enter the username: ')
-        password = input('Enter the password: ')
-
+        if username=="" and password =="":
+            username = input('Enter the username: ')
+            password = input('Enter the password: ')
+        # print(username , password)
         # check if the username and password match the registered ones
         #ToDo1
         if(self.__username == username and self.__password == password):
