@@ -77,7 +77,7 @@ class HospitalGUI:
 
         btn_style = {"font": ("Helvetica", 12), "width": 35, "pady": 10}
 
-        tk.Button(self.current_frame, text="1. Doctor Management", **btn_style).pack(pady=8)
+        tk.Button(self.current_frame, text="1. Doctor Management", **btn_style,command=self.open_doctor_management).pack(pady=8)
         tk.Button(self.current_frame, text="2. Patient Management", **btn_style).pack(pady=8)
         tk.Button(self.current_frame, text="3. View Discharged Patients", **btn_style).pack(pady=8)
         tk.Button(self.current_frame, text="4. Assign Doctor to Patient", **btn_style).pack(pady=8)
@@ -85,6 +85,33 @@ class HospitalGUI:
         tk.Button(self.current_frame, text="6. View Management Reports", **btn_style).pack(pady=8)
         tk.Button(self.current_frame, text="7. Update Admin Details", **btn_style).pack(pady=8)
         tk.Button(self.current_frame, text="8. Quit", bg="#f44336", fg="white",font=("Helvetica", 12, "bold"), width=35, pady=10).pack(pady=30)
+
+    # Doctor Management Starts Here
+    def open_doctor_management(self):
+        doc_win = tk.Toplevel(self.root)
+        doc_win.title("Doctor Management")
+        doc_win.geometry("900x600")
+
+        tk.Label(doc_win, text="Doctor Management", font=("Helvetica", 16, "bold")).pack(pady=10)
+
+        # Treeview for doctors
+        columns = ("ID", "Full Name", "Speciality")
+        self.doctor_tree = ttk.Treeview(doc_win, columns=columns, show="headings", height=15)
+        self.doctor_tree.heading("ID", text="ID")
+        self.doctor_tree.heading("Full Name", text="Full Name")
+        self.doctor_tree.heading("Speciality", text="Speciality")
+        self.doctor_tree.column("ID", width=50, anchor="center")
+        self.doctor_tree.column("Full Name", width=300)
+        self.doctor_tree.column("Speciality", width=250)
+        self.doctor_tree.pack(pady=10, padx=20, fill="both", expand=True)
+
+        # Buttons
+        btn_frame = tk.Frame(doc_win)
+        btn_frame.pack(pady=15)
+
+        tk.Button(btn_frame, text="Register Doctor", width=20).pack(side="left", padx=10)
+        tk.Button(btn_frame, text="Update Doctor", width=20).pack(side="left", padx=10)
+        tk.Button(btn_frame, text="Delete Doctor", width=20).pack(side="left", padx=10)
 if __name__ == "__main__":
     root = tk.Tk()
     app = HospitalGUI(root)
