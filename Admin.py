@@ -390,19 +390,19 @@ class Admin:
             #ToDo14
             new_username = input("Enter new username: ")
             self.__username = new_username
-            
+            self.update_admin_file()
 
         elif op == 2:
             password = input('Enter the new password: ')
             # validate the password
             if password == input('Enter the new password again: '):
                 self.__password = password
-
+                self.update_admin_file()
         elif op == 3:
             #ToDo15
             new_address = input("Enter new address: ")
             self.__address = new_address
-
+            self.update_admin_file()
         else:
             #ToDo16
             print("Invalid operation! Please enter a valid operation")
@@ -428,11 +428,37 @@ class Admin:
         else:
             print("Ivalid Input ! Enter 1 ,2 ,3 or 4")
 
+    @classmethod
+    def load_admin_data(cls):
+        """Load the admin data as admin object"""
+        try:
+            with open('./Data/admin.txt','r') as file:
+                row = file.readline()
+                curr_admin = row.split(',')
+                username , password , address = curr_admin
+                admin = cls(username.strip() , password.strip() , address.strip())
+        except Exception as e:
+            print("Error Loading Admin data\n    Error : ",e)
+            return cls("admin","123","Default due to Error")
+        else:
+            return admin
+        
+    def update_admin_file(self):
+        """Save current admin data to file"""
+        try:
+            with open('./Data/admin.txt','w') as file:
+                file.write(f"{self.get_username()},{self.get_password()},{self.get_address()}")
+        except Exception as e:
+            print("Error Updating Admin FIle: ",e)
+            
 if __name__ =='__main__': 
-    my = Admin('a','123','salleri')
-    my.doctor_management([Doctor("Furi","Lama","Surgeon")])
+    my = Admin.load_admin_data()
+    print(my.get_username() , my.get_password())
+    # my.doctor_management([Doctor("Furi","Lama","Surgeon")])
     # my.view_patient([Patient("Furi","Lama",18, "9749214495","22334")])
     # my.assign_doctor_to_patient([Patient("Furi","Lama",18, "9749214495","22334")] ,[Doctor("Furi","Lama","Surgeon")] )
     # my.discharge([Patient("Furi","Lama",18, "9749214495","22334")] , [])
     # my.update_details()
+    my.update_details()
+
 

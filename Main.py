@@ -9,7 +9,8 @@ def main():
     """
 
     # Initialising the actors
-    admin = Admin('admin','123','B1 1AB') # username is 'admin', password is '123'
+    admin = Admin.load_admin_data() # username is 'admin', password is '000'
+
     # doctors = [Doctor('John','Smith','Internal Med.'), Doctor('Jone','Smith','Pediatrics'), Doctor('Jone','Carlos','Cardiology')]
     doctors = load_doctors_data()
     # patients = [Patient('Sara','Smith', 20, '07012345678','B1 234'), Patient('Mike','Jones', 37,'07555551234','L2 2AB'), Patient('Daivd','Smith', 15, '07123456789','C1 ABC')]
