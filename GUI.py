@@ -81,7 +81,7 @@ class HospitalGUI:
         tk.Button(self.current_frame, text="2. Patient Management", **btn_style , command=self.open_patient_management).pack(pady=8)
         tk.Button(self.current_frame, text="3. View Discharged Patients", **btn_style , command=self.view_discharged_patients).pack(pady=8)
         tk.Button(self.current_frame, text="4. Assign Doctor to Patient", **btn_style , command=self.open_assign_doctor).pack(pady=8)
-        tk.Button(self.current_frame, text="5. Reallocate Doctor to Patient", **btn_style).pack(pady=8)
+        tk.Button(self.current_frame, text="5. Reallocate Doctor to Patient", **btn_style ,command=self.open_reallocate_doctor).pack(pady=8)
         tk.Button(self.current_frame, text="6. View Management Reports", **btn_style).pack(pady=8)
         tk.Button(self.current_frame, text="7. Update Admin Details", **btn_style).pack(pady=8)
         tk.Button(self.current_frame, text="8. Quit", bg="#f44336", fg="white",font=("Helvetica", 12, "bold"), width=35, pady=10).pack(pady=30)
@@ -425,6 +425,82 @@ class HospitalGUI:
         update_file(self.patients, 'patient.txt')
         self.refresh_unassigned_tree()
         messagebox.showinfo("Success", "Doctor assigned.")
+
+    # Reallocate Doctor (similar to assign but for assigned patients)
+    def open_reallocate_doctor(self):
+        rea_win = tk.Toplevel(self.root)
+        rea_win.title("Reallocate Doctor to Patient")
+        rea_win.geometry("1200x600")
+
+        # Assigned patients
+        tk.Label(rea_win, text="Assigned Patients",font=("Helvetica", 18, "bold")).grid(row=0, column=0, padx=20 , pady=18)
+        pat_columns = ("ID", "Full Name", "Current Doctor")
+        self.assigned_tree = ttk.Treeview(rea_win, columns=pat_columns, show="headings", height=20)
+        self.assigned_tree.column("ID",width=70 , anchor="center")
+        self.assigned_tree.column("Full Name",width=200)
+        self.assigned_tree.column("Current Doctor",width=200)
+        for col in pat_columns:
+            self.assigned_tree.heading(col, text=col)
+        self.refresh_assigned_tree()
+        self.assigned_tree.grid(row=1, column=0, padx=20)
+
+        # Doctors
+        tk.Label(rea_win, text="Doctors",font=("Helvetica", 18, "bold")).grid(row=0, column=1, padx=20 , pady=18)
+        doc_columns = ("ID", "Full Name", "Speciality")
+        self.doc_tree_rea = ttk.Treeview(rea_win, columns=doc_columns, show="headings", height=20)
+        self.doc_tree_rea.column("ID",width=50 , anchor="center")
+        self.doc_tree_rea.column("Full Name",width=200)
+        self.doc_tree_rea.column("Speciality",width=200)
+        for col in doc_columns:
+            self.doc_tree_rea.heading(col, text=col)
+        self.refresh_doc_tree_rea()
+        self.doc_tree_rea.grid(row=1, column=1, padx=20)
+
+        tk.Button(rea_win, text="Reallocate Selected", command=self.perform_reallocate ,bg="#4CAF50" ,fg='white').grid(row=2, column=0, columnspan=2, pady=20)
+
+
+    def refresh_assigned_tree(self):
+        self.assigned_tree.delete(*self.assigned_tree.get_children())
+        assigned = [p for p in self.patients if p.get_doctor() != 'None']
+        for i, pat in enumerate(assigned, 1):
+            self.assigned_tree.insert("", "end", values=(i, pat.full_name(), pat.get_doctor()))
+
+    def refresh_doc_tree_rea(self):
+        self.doc_tree_rea.delete(*self.doc_tree_rea.get_children())
+        for i, doc in enumerate(self.doctors, 1):
+            self.doc_tree_rea.insert("", "end", values=(i, doc.full_name(), doc.get_speciality()))
+
+    def perform_reallocate(self):
+        pat_sel = self.assigned_tree.selection()
+        doc_sel = self.doc_tree_rea.selection()
+        if not pat_sel:
+            messagebox.showwarning("Selection Error", "Select a patient by clicking on it.")
+            return
+        if not doc_sel:
+            messagebox.showwarning("Selection Error", "Select a new doctor by clicking on it.")
+            return
+        pat_index = int(self.assigned_tree.item(pat_sel[0] , 'values')[0]) - 1
+        assigned = [p for p in self.patients if p.get_doctor() != 'None']
+        pat = assigned[pat_index]
+        old_doc_name = pat.get_doctor()
+        doc_index = int(self.doc_tree_rea.item(doc_sel[0])['values'][0]) - 1
+        new_doc = self.doctors[doc_index]
+        if old_doc_name == new_doc.full_name():
+            messagebox.showwarning("Error", "Same doctor selected.")
+            return
+        # Remove from old doctor
+        for doc in self.doctors:
+            if doc.full_name() == old_doc_name:
+                doc.remove_patient(pat)
+                break
+        # Assign to new
+        pat.link(new_doc.full_name())
+        new_doc.add_patient(pat)
+        update_file(self.patients, 'patient.txt')
+        self.refresh_assigned_tree()
+        messagebox.showinfo("Success", "Doctor reallocated.")
+
+
 if __name__ == "__main__":
     root = tk.Tk()
     app = HospitalGUI(root)
