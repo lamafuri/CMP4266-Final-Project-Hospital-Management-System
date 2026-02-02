@@ -79,7 +79,7 @@ class HospitalGUI:
 
         tk.Button(self.current_frame, text="1. Doctor Management", **btn_style,command=self.open_doctor_management).pack(pady=8)
         tk.Button(self.current_frame, text="2. Patient Management", **btn_style , command=self.open_patient_management).pack(pady=8)
-        tk.Button(self.current_frame, text="3. View Discharged Patients", **btn_style).pack(pady=8)
+        tk.Button(self.current_frame, text="3. View Discharged Patients", **btn_style , command=self.view_discharged_patients).pack(pady=8)
         tk.Button(self.current_frame, text="4. Assign Doctor to Patient", **btn_style).pack(pady=8)
         tk.Button(self.current_frame, text="5. Reallocate Doctor to Patient", **btn_style).pack(pady=8)
         tk.Button(self.current_frame, text="6. View Management Reports", **btn_style).pack(pady=8)
@@ -347,6 +347,21 @@ class HospitalGUI:
             # Refresh both trees if they exist
             self.refresh_patient_tree()       
             messagebox.showinfo("Success", "Patient discharged successfully.")
+
+    # View Discharged Patients
+    def view_discharged_patients(self):
+        view_win = tk.Toplevel(self.root)
+        view_win.title("Discharged Patients")
+        view_win.geometry("1000x600")
+
+        columns = ("ID", "Full Name", "Doctor", "Age", "Mobile", "Postcode")
+        tree = ttk.Treeview(view_win, columns=columns, show="headings", height=20)
+        for col in columns:
+            tree.heading(col, text=col)
+            tree.column(col, width=150, anchor="center")
+        for i, pat in enumerate(self.discharged_patients, 1):
+            tree.insert("", "end", values=(i, pat.full_name(), pat.get_doctor(), pat.age, pat.mobile, pat.postcode))
+        tree.pack(pady=10, padx=20, fill="both", expand=True)
 if __name__ == "__main__":
     root = tk.Tk()
     app = HospitalGUI(root)
