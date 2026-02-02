@@ -109,9 +109,9 @@ class HospitalGUI:
         btn_frame = tk.Frame(doc_win)
         btn_frame.pack(pady=15)
 
-        tk.Button(btn_frame, text="Register Doctor", width=20).pack(side="left", padx=10)
-        tk.Button(btn_frame, text="Update Doctor", width=20).pack(side="left", padx=10)
-        tk.Button(btn_frame, text="Delete Doctor", width=20).pack(side="left", padx=10)
+        tk.Button(btn_frame, text="Register Doctor", width=20 , command=self.register_doctor).pack(side="left", padx=10)
+        tk.Button(btn_frame, text="Update Doctor", width=20 , command=self.update_doctor).pack(side="left", padx=10)
+        tk.Button(btn_frame, text="Delete Doctor", width=20 , command=self.delete_doctor).pack(side="left", padx=10)
     def refresh_doctor_tree(self):
         """Refresh the whole table tree"""
         all_doctor_tree_rows_id = self.doctor_tree.get_children()
@@ -119,8 +119,114 @@ class HospitalGUI:
         for indx ,doc in enumerate(self.doctors , 1):
             self.doctor_tree.insert("" , "end", values=(indx , doc.full_name() , doc.get_speciality()))
 
+    def register_doctor(self):
+        reg_form = tk.Toplevel(self.root , padx=35 ,pady=15)
+        reg_form.title("Register New Doctor")
+        reg_form.geometry("450x350")
 
+        reg_form.columnconfigure(0 , weight=1 , pad=15)
+        reg_form.columnconfigure(1 , weight=3 , pad=15)
 
+        reg_form.rowconfigure(list(range(10)) , weight=1 , pad=10)
+
+        tk.Label(reg_form , text="First Name:").grid(row=0 , column=0 , sticky='e')
+        fn_entry = tk.Entry(reg_form)
+        fn_entry.grid(row=0 , column=1 , sticky='ew')
+        tk.Label(reg_form , text="Surname:").grid(row=1 , column=0 , sticky='e')
+        sur_entry = tk.Entry(reg_form)
+        sur_entry.grid(row=1 , column=1 , sticky='ew')
+        tk.Label(reg_form , text="Speciality:").grid(row=2 , column=0 , sticky='e')
+        spec_entry = tk.Entry(reg_form)
+        spec_entry.grid(row=2 , column=1 , sticky='ew')
+
+        def save():
+            first_name = fn_entry.get().strip()
+            surname = sur_entry.get().strip()
+            speciality = spec_entry.get().strip()
+
+            if not all([first_name , surname , speciality]):
+                messagebox.showerror("Error","All the input fields need to be filled")
+                return
+            for doc in self.doctors:
+                if first_name == doc.get_first_name() and surname == doc.get_surname():
+                    messagebox.showerror("Error" , "Doctor already exists with the given name")
+                    return
+            new_doctor = Doctor(first_name , surname , speciality)
+            self.doctors.append(new_doctor)
+            update_file(self.doctors , 'doctor.txt')
+            self.refresh_doctor_tree()
+            reg_form.destroy()
+            messagebox.showinfo("Success","Doctor registered successfully")
+
+        tk.Button(reg_form , text="Register",command=save , bg="#4CAF50" ,fg='white').grid(row=4 , column=0 , columnspan=2 , sticky='ew')
+
+    def update_doctor(self):
+        selected = self.doctor_tree.selection()
+        if not selected:
+            messagebox.showwarning("Selection Error", "Select a doctor to update.")
+            return
+        index = int(self.doctor_tree.item(selected[0] ,'values')[0]) - 1
+        doc = self.doctors[index]
+        
+        update_form = tk.Toplevel(self.root , padx=35 ,pady=15)
+        update_form.title("Update Doctor")
+        update_form.geometry("450x350")
+
+        update_form.columnconfigure(0 , weight=1 , pad=15)
+        update_form.columnconfigure(1 , weight=3 , pad=15)
+
+        update_form.rowconfigure(list(range(10)) , weight=1 , pad=10)
+
+        tk.Label(update_form , text="First Name:").grid(row=0 , column=0 , sticky='e')
+        fn_entry = tk.Entry(update_form)
+        fn_entry.insert(0 , doc.get_first_name())
+        fn_entry.grid(row=0 , column=1 , sticky='ew')
+        tk.Label(update_form , text="Surname:").grid(row=1 , column=0 , sticky='e')
+        sur_entry = tk.Entry(update_form)
+        sur_entry.insert(0 , doc.get_surname())
+        sur_entry.grid(row=1 , column=1 , sticky='ew')
+        tk.Label(update_form , text="Speciality:").grid(row=2 , column=0 , sticky='e')
+        spec_entry = tk.Entry(update_form)
+        spec_entry.insert(0 , doc.get_speciality())
+        spec_entry.grid(row=2 , column=1 , sticky='ew')
+
+        def save():
+            new_fn = fn_entry.get().strip()
+            new_sur = sur_entry.get().strip()
+            new_spec = spec_entry.get().strip()
+            if not all([new_fn , new_sur , new_spec]):
+                messagebox.showerror("Error","All the input fields need to be filled")
+                return
+            for doc in self.doctors:
+                if new_fn == doc.get_first_name() and new_sur == doc.get_surname():
+                    messagebox.showerror("Error" , "Doctor already exists with the given name")
+                    return
+            doc.set_first_name(new_fn)
+            doc.set_surname(new_sur)
+            doc.set_speciality(new_spec)
+            update_file(self.doctors, 'doctor.txt')
+            self.refresh_doctor_tree()
+            update_form.destroy()
+            messagebox.showinfo("Success", "Doctor updated.")
+
+        tk.Button(update_form , text="Update",command=save , bg="#4CAF50" ,fg='white').grid(row=4 , column=0 , columnspan=2 , sticky='ew')
+
+    def delete_doctor(self):
+        selected = self.doctor_tree.selection()
+        if not selected:
+            messagebox.showerror("Error","Select a doctor to delete")
+            return
+        selection_id = selected[0]
+        index = int(self.doctor_tree.item(selection_id ,'values')[0]) - 1
+        doc = self.doctors[index]
+        if doc.get_patients():  # Check if the selected doctor has patients
+            messagebox.showerror("Error", "Cannot delete doctor with assigned patients.")
+            return
+        if messagebox.askyesno("Confirm",f"Delete {doc.full_name()}?"):
+            self.doctors.pop(index)
+            update_file(self.doctors , 'doctor.txt')
+            self.refresh_doctor_tree()
+            messagebox.showinfo("Success", "Doctor deleted.")
         
 if __name__ == "__main__":
     root = tk.Tk()
