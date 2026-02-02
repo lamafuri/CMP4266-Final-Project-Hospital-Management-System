@@ -18,6 +18,11 @@ class Admin:
         self.__address =  address
     def get_username(self):
         return self.__username
+    def get_password(self):
+        return self.__password
+    def get_address(self):
+        return self.__address
+    
     def view(self,a_list):
         """
         print a list
@@ -385,6 +390,7 @@ class Admin:
             #ToDo14
             new_username = input("Enter new username: ")
             self.__username = new_username
+            
 
         elif op == 2:
             password = input('Enter the new password: ')
