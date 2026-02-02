@@ -22,7 +22,12 @@ class Admin:
         return self.__password
     def get_address(self):
         return self.__address
-    
+    def set_username(self , new_username):
+        self.__username = new_username
+    def set_password(self , new_password):
+        self.__password = new_password
+    def set_address(self , new_address):
+        self.__address = new_address
     def view(self,a_list):
         """
         print a list
@@ -450,7 +455,7 @@ class Admin:
                 file.write(f"{self.get_username()},{self.get_password()},{self.get_address()}")
         except Exception as e:
             print("Error Updating Admin FIle: ",e)
-            
+
 if __name__ =='__main__': 
     my = Admin.load_admin_data()
     print(my.get_username() , my.get_password())
