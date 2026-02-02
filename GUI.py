@@ -82,7 +82,7 @@ class HospitalGUI:
         tk.Button(self.current_frame, text="3. View Discharged Patients", **btn_style , command=self.view_discharged_patients).pack(pady=8)
         tk.Button(self.current_frame, text="4. Assign Doctor to Patient", **btn_style , command=self.open_assign_doctor).pack(pady=8)
         tk.Button(self.current_frame, text="5. Reallocate Doctor to Patient", **btn_style ,command=self.open_reallocate_doctor).pack(pady=8)
-        tk.Button(self.current_frame, text="6. View Management Reports", **btn_style).pack(pady=8)
+        tk.Button(self.current_frame, text="6. View Management Reports", **btn_style , command=self.open_management_reports).pack(pady=8)
         tk.Button(self.current_frame, text="7. Update Admin Details", **btn_style).pack(pady=8)
         tk.Button(self.current_frame, text="8. Quit", bg="#f44336", fg="white",font=("Helvetica", 12, "bold"), width=35, pady=10).pack(pady=30)
 
@@ -500,7 +500,29 @@ class HospitalGUI:
         self.refresh_assigned_tree()
         messagebox.showinfo("Success", "Doctor reallocated.")
 
+    # Management Reports
+    def open_management_reports(self):
+        rep_win = tk.Toplevel(self.root)
+        rep_win.title("Management Reports")
+        rep_win.geometry("600x500")
 
+        tk.Label(rep_win, text="Management Reports", font=("Helvetica", 16, "bold")).pack(pady=10)
+
+        btn_style = {"font": ("Helvetica", 12), "width": 40, "pady": 10}
+
+        tk.Button(rep_win, text="1. Total Number of Doctors", **btn_style,command=lambda: messagebox.showinfo("Report", f"Total Doctors: {len(self.doctors)}")).pack(pady=8)
+
+        tk.Button(rep_win, text="2. Total Patients per Doctor", **btn_style,command=self.show_patients_per_doctor).pack(pady=8)
+
+        tk.Button(rep_win, text="3. Total Appointments per Doctor", **btn_style,command=lambda: messagebox.showinfo("Report", "Appointments not implemented yet.")).pack(pady=8)
+
+        tk.Button(rep_win, text="4. Patients by Illness Type", **btn_style,command=lambda: messagebox.showinfo("Report", "Illness types not implemented yet.")).pack(pady=8)
+
+    def show_patients_per_doctor(self):
+        text = "Patients per Doctor:\n\n"
+        for doc in self.doctors:
+            text += f"{doc.full_name()}: {len(doc.get_patients())} patients\n"
+        messagebox.showinfo("Report", text)
 if __name__ == "__main__":
     root = tk.Tk()
     app = HospitalGUI(root)
