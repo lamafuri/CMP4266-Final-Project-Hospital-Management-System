@@ -18,7 +18,7 @@ class HospitalGUI:
         self.root.geometry("1000x650")
 
         # Hardcoded admin 
-        self.admin = Admin('admin', '123', 'B1 1AB')
+        self.admin = Admin.load_admin_data()
         self.doctors = []
         self.patients = []
         self.grouped_patients = {}
@@ -83,7 +83,7 @@ class HospitalGUI:
         tk.Button(self.current_frame, text="4. Assign Doctor to Patient", **btn_style , command=self.open_assign_doctor).pack(pady=8)
         tk.Button(self.current_frame, text="5. Reallocate Doctor to Patient", **btn_style ,command=self.open_reallocate_doctor).pack(pady=8)
         tk.Button(self.current_frame, text="6. View Management Reports", **btn_style , command=self.open_management_reports).pack(pady=8)
-        tk.Button(self.current_frame, text="7. Update Admin Details", **btn_style).pack(pady=8)
+        tk.Button(self.current_frame, text="7. Update Admin Details", **btn_style ,command=self.open_update_admin).pack(pady=8)
         tk.Button(self.current_frame, text="8. Quit", bg="#f44336", fg="white",font=("Helvetica", 12, "bold"), width=35, pady=10).pack(pady=30)
 
     # Doctor Management Starts Here
@@ -523,6 +523,51 @@ class HospitalGUI:
         for doc in self.doctors:
             text += f"{doc.full_name()}: {len(doc.get_patients())} patients\n"
         messagebox.showinfo("Report", text)
+    
+    # Update Admin Details
+    def open_update_admin(self):
+        upd_win = tk.Toplevel(self.root)
+        upd_win.title("Update Admin Details")
+        upd_win.geometry("450x400")
+
+        tk.Label(upd_win, text="Username:").pack(pady=5)
+        un_entry = tk.Entry(upd_win, width=35)
+        un_entry.insert(0, self.admin.get_username())
+        un_entry.pack()
+
+        tk.Label(upd_win, text="Password:").pack(pady=5)
+        pw_entry = tk.Entry(upd_win, show="*", width=35)
+        pw_entry.pack()
+
+        tk.Label(upd_win, text="Confirm Password:").pack(pady=5)
+        cpw_entry = tk.Entry(upd_win, show="*", width=35)
+        cpw_entry.pack()
+
+        tk.Label(upd_win, text="Address:").pack(pady=5)
+        addr_entry = tk.Entry(upd_win, width=35)
+        addr_entry.insert(0, self.admin.get_address())
+        addr_entry.pack()
+
+        def save():
+            new_un = un_entry.get().strip()
+            new_pw = pw_entry.get().strip()
+            conf_pw = cpw_entry.get().strip()
+            new_addr = addr_entry.get().strip()
+
+            if new_un:
+                self.admin.set_username(new_un)
+            if new_pw:
+                if new_pw != conf_pw:
+                    messagebox.showerror("Error", "Passwords do not match.")
+                    return
+                self.admin.set_password(new_pw)
+            if new_addr:
+                self.admin.set_address(new_addr)
+            self.admin.update_admin_file()
+            upd_win.destroy()
+            messagebox.showinfo("Success", "Admin details updated.")
+
+        tk.Button(upd_win, text="Update", command=save).pack(pady=20)
 if __name__ == "__main__":
     root = tk.Tk()
     app = HospitalGUI(root)
