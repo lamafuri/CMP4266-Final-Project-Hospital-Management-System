@@ -78,7 +78,7 @@ class HospitalGUI:
         btn_style = {"font": ("Helvetica", 12), "width": 35, "pady": 10}
 
         tk.Button(self.current_frame, text="1. Doctor Management", **btn_style,command=self.open_doctor_management).pack(pady=8)
-        tk.Button(self.current_frame, text="2. Patient Management", **btn_style).pack(pady=8)
+        tk.Button(self.current_frame, text="2. Patient Management", **btn_style , command=self.open_patient_management).pack(pady=8)
         tk.Button(self.current_frame, text="3. View Discharged Patients", **btn_style).pack(pady=8)
         tk.Button(self.current_frame, text="4. Assign Doctor to Patient", **btn_style).pack(pady=8)
         tk.Button(self.current_frame, text="5. Reallocate Doctor to Patient", **btn_style).pack(pady=8)
@@ -228,6 +228,125 @@ class HospitalGUI:
             self.refresh_doctor_tree()
             messagebox.showinfo("Success", "Doctor deleted.")
         
+    # Patient Management Start Here
+    def open_patient_management(self):
+        pat_win = tk.Toplevel(self.root)
+        pat_win.title("Patient Management")
+        pat_win.geometry("900x600")
+
+        tk.Label(pat_win, text="Patient Management", font=("Helvetica", 16, "bold")).pack(pady=10)
+
+        # Treeview for patients (used in View & Discharge)
+        columns = ("ID", "Full Name", "Doctor", "Age", "Mobile", "Postcode")
+        self.patient_tree = ttk.Treeview(pat_win, columns=columns, show="headings", height=15)
+        for col in columns:
+            self.patient_tree.heading(col, text=col)
+            self.patient_tree.column(col,anchor="center")
+        
+        self.patient_tree.column("ID", width=50)
+        self.patient_tree.column("Full Name", width=220)
+        self.patient_tree.column("Doctor", width=180)
+        self.patient_tree.column("Age", width=60)
+        self.patient_tree.column("Mobile", width=120)
+        self.patient_tree.column("Postcode", width=100)
+        
+        self.patient_tree.pack(pady=10, padx=20, fill="both", expand=True)
+        self.refresh_patient_tree()
+
+        # Buttons
+        btn_frame = tk.Frame(pat_win)
+        btn_frame.pack(pady=15)
+
+        tk.Button(btn_frame, text="Admit New Patient", width=20, command=self.admit_patient).pack(side="left", padx=10)
+        tk.Button(btn_frame, text="Discharge Selected",width=20, command=self.perform_discharge,bg="#f44336", fg="white").pack(side="left" ,padx=10)
+
+    def refresh_patient_tree(self):
+        """Clear and repopulate patient treeview"""
+        self.patient_tree.delete(*self.patient_tree.get_children())
+        for idx, pat in enumerate(self.patients, 1):
+            self.patient_tree.insert("", "end",values=(idx, pat.full_name(), pat.get_doctor(), pat.age,pat.mobile, pat.postcode))
+
+
+    def admit_patient(self):
+        adm_win = tk.Toplevel(self.root , padx=30 , pady=20)
+        adm_win.title("Admit New Patient")
+        adm_win.geometry("450x380")
+
+        adm_win.columnconfigure(0, weight=1, pad=15)
+        adm_win.columnconfigure(1, weight=3, pad=15)
+        adm_win.rowconfigure(list(range(8)) , weight=1 , pad=8)
+
+        tk.Label(adm_win, text="First Name:").grid(row=0, column=0, sticky='e')
+        fn_entry = tk.Entry(adm_win)
+        fn_entry.grid(row=0, column=1, sticky='ew')
+
+        tk.Label(adm_win, text="Surname:").grid(row=1, column=0, sticky='e')
+        sn_entry = tk.Entry(adm_win)
+        sn_entry.grid(row=1, column=1, sticky='ew')
+
+        tk.Label(adm_win, text="Age:").grid(row=2, column=0, sticky='e')
+        age_entry = tk.Entry(adm_win)
+        age_entry.grid(row=2, column=1, sticky='ew')
+
+        tk.Label(adm_win, text="Mobile:").grid(row=3, column=0, sticky='e')
+        mob_entry = tk.Entry(adm_win)
+        mob_entry.grid(row=3, column=1, sticky='ew')
+
+        tk.Label(adm_win, text="Postcode:").grid(row=4, column=0, sticky='e')
+        pc_entry = tk.Entry(adm_win)
+        pc_entry.grid(row=4, column=1, sticky='ew')
+
+        def save():
+            try:
+                first_name = fn_entry.get().strip()
+                surname    = sn_entry.get().strip()
+                age        = int(age_entry.get().strip())
+                mobile     = mob_entry.get().strip()
+                postcode   = pc_entry.get().strip()
+
+                if not all([first_name, surname, mobile, postcode]):
+                    raise ValueError("Please fill all fields correctly.")
+                if age <=0:
+                    raise ValueError("Age must be positive.")
+
+                new_pat = Patient(first_name, surname, age, mobile, postcode)
+                self.patients.append(new_pat)
+                self.grouped_patients.setdefault(surname, []).append(new_pat)
+                update_file(self.patients, 'patient.txt')
+                self.refresh_patient_tree()          # update main tree if visible
+                adm_win.destroy()
+                messagebox.showinfo("Success", "Patient admitted successfully.")
+            except ValueError as e:
+                messagebox.showerror("Input Error", e)
+
+        tk.Button(adm_win, text="Admit", command=save,bg="#4CAF50", fg='white').grid(row=6, column=0, columnspan=2, sticky='ew', pady=10)
+
+    def perform_discharge(self):
+        selected = self.patient_tree.selection()
+        if not selected:
+            messagebox.showwarning("Selection Error", "Please select a patient to discharge.")
+            return
+        
+        index = int(self.patient_tree.item(selected[0] , 'values')[0]) - 1
+        pat = self.patients[index]
+
+        if messagebox.askyesno("Confirm Discharge", f"Discharge {pat.full_name()}?"):
+            # Remove from doctor's list if assigned
+            doc_name = pat.get_doctor()
+            if doc_name != 'None':
+                for doc in self.doctors:
+                    if doc.full_name() == doc_name:
+                        doc.remove_patient(pat)
+                        break
+
+            discharged = self.patients.pop(index)
+            self.discharged_patients.append(discharged)
+            update_file(self.patients, 'patient.txt')
+            update_file(self.discharged_patients, 'discharged_patient.txt')
+            
+            # Refresh both trees if they exist
+            self.refresh_patient_tree()       
+            messagebox.showinfo("Success", "Patient discharged successfully.")
 if __name__ == "__main__":
     root = tk.Tk()
     app = HospitalGUI(root)
