@@ -17,7 +17,7 @@ class HospitalGUI:
         self.root.title("Hospital Management System")
         self.root.geometry("1000x650")
 
-        # Hardcoded admin for simplicity, as in Main.py
+        # Hardcoded admin 
         self.admin = Admin('admin', '123', 'B1 1AB')
         self.doctors = []
         self.patients = []
@@ -80,7 +80,7 @@ class HospitalGUI:
         tk.Button(self.current_frame, text="1. Doctor Management", **btn_style,command=self.open_doctor_management).pack(pady=8)
         tk.Button(self.current_frame, text="2. Patient Management", **btn_style , command=self.open_patient_management).pack(pady=8)
         tk.Button(self.current_frame, text="3. View Discharged Patients", **btn_style , command=self.view_discharged_patients).pack(pady=8)
-        tk.Button(self.current_frame, text="4. Assign Doctor to Patient", **btn_style).pack(pady=8)
+        tk.Button(self.current_frame, text="4. Assign Doctor to Patient", **btn_style , command=self.open_assign_doctor).pack(pady=8)
         tk.Button(self.current_frame, text="5. Reallocate Doctor to Patient", **btn_style).pack(pady=8)
         tk.Button(self.current_frame, text="6. View Management Reports", **btn_style).pack(pady=8)
         tk.Button(self.current_frame, text="7. Update Admin Details", **btn_style).pack(pady=8)
@@ -362,6 +362,69 @@ class HospitalGUI:
         for i, pat in enumerate(self.discharged_patients, 1):
             tree.insert("", "end", values=(i, pat.full_name(), pat.get_doctor(), pat.age, pat.mobile, pat.postcode))
         tree.pack(pady=10, padx=20, fill="both", expand=True)
+
+    # Assign Doctor
+    def open_assign_doctor(self):
+        ass_win = tk.Toplevel(self.root)
+        ass_win.title("Assign Doctor to Patient")
+        ass_win.geometry("1200x600")
+
+        # Patients without doctor
+        tk.Label(ass_win, text="Unassigned Patients",font=("Helvetica", 18, "bold")).grid(row=0, column=0, padx=20 , pady=18)
+        pat_columns = ("ID", "Full Name")
+        self.unassigned_tree = ttk.Treeview(ass_win, columns=pat_columns, show="headings", height=20)
+        self.unassigned_tree.heading("ID",text="ID")
+        self.unassigned_tree.heading("Full Name",text="Full Name")
+        self.unassigned_tree.column("ID",width=100 , anchor='center')
+        self.unassigned_tree.column("Full Name",width=250)
+        self.refresh_unassigned_tree()
+        self.unassigned_tree.grid(row=1, column=0, padx=20)
+
+        # Doctors
+        tk.Label(ass_win, text="Doctors" ,font=("Helvetica", 18, "bold")).grid(row=0, column=1, padx=20 , pady=18)
+        doc_columns = ("ID", "Full Name", "Speciality")
+        self.doc_tree_ass = ttk.Treeview(ass_win, columns=doc_columns, show="headings", height=20)
+        self.doc_tree_ass.column("ID" , width=100 , anchor='center')
+        self.doc_tree_ass.column("Full Name" , width=250)
+        self.doc_tree_ass.column("Speciality" , width=250)
+        for col in doc_columns:
+            self.doc_tree_ass.heading(col, text=col)
+        self.refresh_doc_tree_ass()
+        self.doc_tree_ass.grid(row=1, column=1, padx=20)
+
+        tk.Button(ass_win, text="Assign Selected", command=self.perform_assign , bg="#4CAF50" ,fg='white').grid(row=2, column=0, columnspan=2, pady=20)
+
+    def refresh_unassigned_tree(self):
+        self.unassigned_tree.delete(*self.unassigned_tree.get_children())
+        unassigned = [p for p in self.patients if p.get_doctor() == 'None']
+        for i, pat in enumerate(unassigned, 1):
+            self.unassigned_tree.insert("", "end", values=(i, pat.full_name()))
+
+    def refresh_doc_tree_ass(self):
+        self.doc_tree_ass.delete(*self.doc_tree_ass.get_children())
+        for i, doc in enumerate(self.doctors, 1):
+            self.doc_tree_ass.insert("", "end", values=(i, doc.full_name(), doc.get_speciality()))
+
+    def perform_assign(self):
+        pat_sel = self.unassigned_tree.selection()
+        doc_sel = self.doc_tree_ass.selection()
+        if not pat_sel:
+            messagebox.showwarning("Selection Error", "Select a patient by clicking it.")
+            return
+        if not doc_sel:
+            messagebox.showwarning("Selection Error", "Select a doctor by clicking it.")
+            return
+
+        pat_index = int(self.unassigned_tree.item(pat_sel[0] , 'values')[0]) - 1
+        unassigned = [p for p in self.patients if p.get_doctor() == 'None']
+        pat = unassigned[pat_index]
+        doc_index = int(self.doc_tree_ass.item(doc_sel[0], 'values')[0]) - 1
+        doc = self.doctors[doc_index]
+        pat.link(doc.full_name())
+        doc.add_patient(pat)
+        update_file(self.patients, 'patient.txt')
+        self.refresh_unassigned_tree()
+        messagebox.showinfo("Success", "Doctor assigned.")
 if __name__ == "__main__":
     root = tk.Tk()
     app = HospitalGUI(root)
