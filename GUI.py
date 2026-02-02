@@ -104,7 +104,7 @@ class HospitalGUI:
         self.doctor_tree.column("Full Name", width=300)
         self.doctor_tree.column("Speciality", width=250)
         self.doctor_tree.pack(pady=10, padx=20, fill="both", expand=True)
-
+        self.refresh_doctor_tree()
         # Buttons
         btn_frame = tk.Frame(doc_win)
         btn_frame.pack(pady=15)
@@ -112,6 +112,16 @@ class HospitalGUI:
         tk.Button(btn_frame, text="Register Doctor", width=20).pack(side="left", padx=10)
         tk.Button(btn_frame, text="Update Doctor", width=20).pack(side="left", padx=10)
         tk.Button(btn_frame, text="Delete Doctor", width=20).pack(side="left", padx=10)
+    def refresh_doctor_tree(self):
+        """Refresh the whole table tree"""
+        all_doctor_tree_rows_id = self.doctor_tree.get_children()
+        self.doctor_tree.delete(*all_doctor_tree_rows_id)
+        for indx ,doc in enumerate(self.doctors , 1):
+            self.doctor_tree.insert("" , "end", values=(indx , doc.full_name() , doc.get_speciality()))
+
+
+
+        
 if __name__ == "__main__":
     root = tk.Tk()
     app = HospitalGUI(root)
