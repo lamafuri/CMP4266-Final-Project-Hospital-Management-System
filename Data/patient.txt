@@ -1,31 +1,7 @@
-Joe,Brown,32,447900001111,SW1A 1AA,Michael Adams,Fever|Cough
 Emily,Brown,27,447900001112,SW1A 1AA,Michael Adams,Fever|Sore Throat
 Daniel,Brown,54,447900001113,SW1A 1AA,Michael Adams,Chest Pain|Shortness of Breath
 Liam,Smith,41,447900002111,EC1A 1BB,Sarah Collins,Back Pain
 Olivia,Smith,38,447900002112,EC1A 1BB,Sarah Collins,Headache
 Ava,Wilson,35,447900003111,LS1 4AP,James Patel,Fatigue|Nausea
 Ethan,Wilson,37,447900003112,LS1 4AP,James Patel,High Blood Pressure
-Sophia,Johnson,47,447900004111,CF10 1EP,James Patel,Anxiety|Insomnia
-Lucas,Johnson,21,447900004112,CF10 1EP,James Patel,Joint Pain|Muscle Pain
-Isla,Thompson,28,447900005112,NG1 6AA,Rebecca Khan,Rash|Itching
-George,Thompson,62,447900005113,NG1 6AA,Rebecca Khan,Dizziness|Nausea
-Mia,Anderson,26,447900006111,YO1 7HP,David Wilson,Abdominal Pain|Diarrhea
-Jack,Anderson,58,447900006112,YO1 7HP,David Wilson,Chest Pain|Palpitations
-Harry,Walker,44,447900007111,AB10 1XG,Emma Roberts,Fever|Chills
-Ella,Walker,42,447900007112,AB10 1XG,Emma Roberts,Headache|Loss of Smell
-Chloe,Clark,31,447900008112,PL1 3BJ,Emma Roberts,Sore Throat|Runny Nose
-Oscar,Hall,24,447900009111,OX1 4BT,Thomas Green,Cough|Sneezing
-Amelia,Scott,29,447900010111,BT1 1AA,None,Back Pain|Muscle Pain
-Noah,Baker,50,447900010112,BT1 1AA,None,Elevated Blood Sugar
-Lily,Evans,33,447900011111,M1 2AB,None,Anxiety
-Benjamin,Price,60,447900011112,M1 2AB,None,High Blood Pressure|Headache
-Zoe,Green,19,447900012111,B1 4BB,None,Bruising|Bleeding
-Mason,Young,45,447900012112,B1 4BB,None,Fever|Sweats
-Harper,King,36,447900013111,WS1 2NT,None,Shortness of Breath
-Alexander,Reed,52,447900013112,WS1 2NT,None,Dizziness|Confusion
-Grace,Wright,27,447900014111,GU1 3AA,None,Nausea|Vomiting
-Samuel,Lopez,40,447900014112,GU1 3AA,None,Insomnia|Anxiety
-Sienna,Fisher,31,447900015111,SR1 1AA,None,Runny Nose|Sneezing
-Henry,Stone,55,447900015112,SR1 1AA,Thomas Green,Chest Pain
-Furi,Lama,18,9749214495,44600,John Smith,Headache|Diarrhea
-Kaji,Lama,78,9876765738,44600,None,Fever|Nausea
+Furi,Lama,18,1234567890,44600,Test Doctor,Fever|Cough

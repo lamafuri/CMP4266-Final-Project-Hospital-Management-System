@@ -9,18 +9,15 @@ def main():
     """
 
     # Initialising the actors
-    admin = Admin.load_admin_data() # username is 'admin', password is '000'
-
-    # doctors = [Doctor('John','Smith','Internal Med.'), Doctor('Jone','Smith','Pediatrics'), Doctor('Jone','Carlos','Cardiology')]
+    admin = Admin.load_admin_data() # username is 'admin', password is '123'
     doctors = load_doctors_data()
-    # patients = [Patient('Sara','Smith', 20, '07012345678','B1 234'), Patient('Mike','Jones', 37,'07555551234','L2 2AB'), Patient('Daivd','Smith', 15, '07123456789','C1 ABC')]
     patients , grouped_patients = load_patients_data()
-    # discharged_patients = []
     discharged_patients = load_discharged_patients_data()
 
     doctor_by_name = {doctor.full_name(): doctor for doctor in doctors}
     update_patients_list_in_doctor(doctor_by_name , patients)
     load_appointments(doctors)
+    print("Welcome to Hospital Management System \n Please login first to continue...")
     # keep trying to login tell the login details are correct
     while True:
         # Successful login only if there was no exception raised
@@ -30,12 +27,13 @@ def main():
             print(e)
         else:
             running = True #allow the program to run
+            print("Successfully Logged in as : ",admin.get_username())
             break
 
 
     while running:
         # print the menu
-        print('Choose the operation:')
+        print('\nChoose the operation:')
         print(' 1- Register/view/update/delete doctor')
         print(' 2- Admit/View/Discharge Patients')
         print(' 3- View discharged patient')

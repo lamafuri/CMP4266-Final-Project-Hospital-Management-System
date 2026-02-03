@@ -1,5 +1,3 @@
-Thomas Green,Henry Stone,2026-02-14,10:00,Full Body Checkup
-John Smith,Furi Lama,2026-02-10,10:30,Medical Consultation regarding surgery
 Michael Adams,Joe Brown,2026-02-05,09:00,Fever & Cough
 Michael Adams,Emily Brown,2026-02-05,09:30,Sore Throat
 Michael Adams,Daniel Brown,2026-02-06,10:00,Chest Pain Evaluation
@@ -7,24 +5,4 @@ Sarah Collins,Liam Smith,2026-02-06,11:00,Back Pain Assessment
 Sarah Collins,Olivia Smith,2026-02-06,11:30,Headache Follow-up
 James Patel,Ava Wilson,2026-02-07,09:00,Fatigue Assessment
 James Patel,Ethan Wilson,2026-02-07,09:30,Hypertension Check
-James Patel,Sophia Johnson,2026-02-07,10:00,Anxiety/Cardiac Review
-James Patel,Lucas Johnson,2026-02-07,10:30,Joint/Muscle Pain Review
-Rebecca Khan,Isla Thompson,2026-02-08,14:00,Rash Consultation
-Rebecca Khan,George Thompson,2026-02-08,14:30,Dizziness Review
-David Wilson,Mia Anderson,2026-02-09,15:00,Abdominal Pain Check
-David Wilson,Jack Anderson,2026-02-09,15:30,Chest Pain Follow-up
-Emma Roberts,Harry Walker,2026-02-10,11:00,Fever & Chills
-Emma Roberts,Ella Walker,2026-02-10,11:30,Headache Assessment
-Emma Roberts,Chloe Clark,2026-02-10,12:00,Sore Throat Check
-Thomas Green,Oscar Hall,2026-02-11,09:00,Cough Evaluation
-Priya Sharma,Noah Baker,2026-02-11,10:00,Elevated Blood Sugar
-Robert Clark,Lily Evans,2026-02-12,09:30,Anxiety Counseling
-James Patel,Benjamin Price,2026-02-12,10:00,Hypertension Follow-up
-John Smith,Zoe Green,2026-02-12,10:30,Bruising Evaluation
-John Smith,Mason Young,2026-02-12,11:00,Fever Assessment
-James Patel,Harper King,2026-02-13,11:30,Shortness of Breath
-Ahmed Khan,Alexander Reed,2026-02-13,12:00,Neurology Evaluation
-John Smith,Grace Wright,2026-02-13,12:30,Nausea Check
-Robert Clark,Samuel Lopez,2026-02-13,13:00,Insomnia/Anxiety
-John Smith,Sienna Fisher,2026-02-14,09:00,Runny Nose
-John Smith,Kaji Lama,2026-02-15,09:30,Fever Check
+Test Doctor,Furi Lama,2026-02-20,14:00,Follow-up

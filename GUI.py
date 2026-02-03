@@ -3,16 +3,7 @@ from tkinter import ttk, messagebox
 from Admin import Admin
 from Doctor import Doctor
 from Patient import Patient
-from utility_functions import (
-    load_doctors_data,
-    load_patients_data,
-    load_discharged_patients_data,
-    update_file,
-    update_patients_list_in_doctor,
-    save_appointment ,
-    load_appointments
-)
-
+from utility_functions import (load_doctors_data,load_patients_data,load_discharged_patients_data,update_file,update_patients_list_in_doctor,save_appointment ,load_appointments)
 class HospitalGUI:
     def __init__(self, root):
         self.root = root
@@ -622,16 +613,6 @@ class HospitalGUI:
         fam_win.geometry("1000x600")
         tk.Label(fam_win,text="Patients Grouped by Family (Surname)",font=("Helvetica", 16, "bold"),pady=10).pack()
 
-        # ── Add scrollable container ──
-        canvas = tk.Canvas(fam_win)
-        scrollbar = ttk.Scrollbar(fam_win, orient="vertical", command=canvas.yview)
-        scrollable_frame = tk.Frame(canvas)
-        scrollable_frame.bind("<Configure>",lambda e: canvas.configure(scrollregion=canvas.bbox("all")))
-        canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
-        canvas.configure(yscrollcommand=scrollbar.set)
-        canvas.pack(side="left", fill="both", expand=True)
-        scrollbar.pack(side="right", fill="y")
-
         sorted_surnames = sorted(self.grouped_patients.keys())
         columns = ('ID','Full Name','Age','Doctor','Mobile','Postcode')
 
@@ -639,8 +620,8 @@ class HospitalGUI:
             family = self.grouped_patients[surname]
             if not family:
                 continue
-            tk.Label(scrollable_frame,text=f"Family: {surname.upper()} ({len(family)} member{'s' if len(family)>1 else ''})",font=("Helvetica", 12, "bold"),anchor="w",padx=20).pack(fill="x", pady=(15, 5))
-            self.family_tree = ttk.Treeview(scrollable_frame , columns=columns , show='headings' , height=len(family))
+            tk.Label(fam_win,text=f"Family: {surname.upper()} ({len(family)} member{'s' if len(family)>1 else ''})",font=("Helvetica", 12, "bold"),anchor="w",padx=20).pack(fill="x", pady=(15, 5))
+            self.family_tree = ttk.Treeview(fam_win , columns=columns , show='headings' , height=len(family))
             for col in columns:
                 self.family_tree.heading(col , text=col)
                 self.family_tree.column(col ,anchor="center")

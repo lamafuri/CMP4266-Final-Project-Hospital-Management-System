@@ -47,7 +47,7 @@ class Admin:
             string: the username
         """
     
-        print("-----Login-----")
+        print("----------Login----------")
         #Get the details of the admin
         if username=="" and password =="":
             username = input('Enter the username: ')
@@ -216,6 +216,7 @@ class Admin:
             new_patient.add_symptom(symp)
         patients.append(new_patient)
         update_file(patients ,'patient.txt')
+        print(f"{first_name} {surname} added successfully")
 
     def view_patient(self, patients):
         """
@@ -238,7 +239,7 @@ class Admin:
         print("-----Assign-----")
 
         print("-----Patients-----")
-        print('ID |          Full Name           |      Doctor`s Full Name      | Age |    Mobile     | Postcode ')
+        print('ID |          Full Name           |      Doctor`s Full Name      | Age |    Mobile     | Postcode |   Symptoms')
         self.view(patients)
 
         patient_index = input('Please enter the patient ID: ')
