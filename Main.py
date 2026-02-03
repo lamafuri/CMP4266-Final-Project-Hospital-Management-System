@@ -2,7 +2,7 @@
 from Admin import Admin
 from Doctor import Doctor
 from Patient import Patient
-from utility_functions import load_doctors_data , load_patients_data , load_discharged_patients_data , update_patients_list_in_doctor
+from utility_functions import load_doctors_data , load_patients_data , load_discharged_patients_data , update_patients_list_in_doctor , save_appointment , load_appointments
 def main():
     """
     the main function to be ran when the program runs
@@ -20,7 +20,7 @@ def main():
 
     doctor_by_name = {doctor.full_name(): doctor for doctor in doctors}
     update_patients_list_in_doctor(doctor_by_name , patients)
-
+    load_appointments(doctors)
     # keep trying to login tell the login details are correct
     while True:
         # Successful login only if there was no exception raised
@@ -44,7 +44,8 @@ def main():
         print(' 6- View Management Report')
         print(' 7- Update admin detais')
         print(" 8- View Grouped Patient's By Family")
-        print(' 9- Quit')
+        print(" 9- Make an appointment")
+        print(' 10- Quit')
 
         # get the option
         op = input('Option: ')
@@ -102,7 +103,20 @@ def main():
             admin.update_details()
         elif op == '8':
             admin.view_grouped_patients_by_family(grouped_patients)
-        elif op == '9':
+        elif op == '9':   # or any free number
+            print("\nMake new appointment (admin only)")
+            doctor = input("Doctor full name : ").strip()
+            patient = input("Patient full name: ").strip()
+            date    = input("Date (YYYY-MM-DD): ").strip()
+            time    = input("Time (HH:MM)     : ").strip()
+            reason  = input("Reason (optional): ").strip()
+
+            if doctor and patient and date and time:
+                save_appointment(doctor, patient, date, time, reason)
+                print("Appointment saved.")
+            else:
+                print("Required fields missing.")
+        elif op == '10':
             # 8 - Quit
             #ToDo5
             print("Exited Successfully !")

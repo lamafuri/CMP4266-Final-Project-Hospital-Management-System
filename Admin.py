@@ -432,7 +432,12 @@ class Admin:
                 print(f"\t{doctor.full_name()} has : {len(doctor.get_patients())} patients")
         elif op == '3':
             # appointent per doctor
-            pass
+            print("Total Number of appointment's per Doctor")
+            print("-"*40)
+            print(f"{'Doctor Name':^16}| No. of Appointments")
+            for doc in doctors:
+                print(f"{doc.full_name():^16}|{len(doc.get_appointments()):^16}")
+
         elif op == '4':
             # Patient based on illness
             illness_symptoms = set()

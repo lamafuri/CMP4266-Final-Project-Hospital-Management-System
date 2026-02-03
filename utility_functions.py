@@ -88,7 +88,45 @@ def update_patients_list_in_doctor(doctor_by_name , patients):
             doctor = doctor_by_name[doctor_name]
             doctor.add_patient(patient)
 
+def save_appointment(doctor_name, patient_name, date, time, reason=""):
+    """Append one new appointment to the file"""
+    line = f"{doctor_name},{patient_name},{date},{time},{reason}".rstrip(',')
+    try:
+        with open('./Data/appointment.txt', 'a') as f:
+            f.write(line + '\n')
+    except Exception as e:
+        print("Error saving appointment:", e)
 
+def load_appointments(doctors):
+    """
+    Reads appointment.txt and adds appointments to the correct Doctor objects' __appointments lists.
+    Returns total number of appointments loaded -for debug).
+    """
+    count = 0
+    try:
+        with open('./Data/appointment.txt', 'r') as f:
+            for line in f:
+                line = line.strip()
+                parts = line.split(',', 4)  # doctor, patient, date, time, reason (reason may have commas)
+                if len(parts) < 4:
+                    continue
+                    
+                doctor_name = parts[0].strip()
+                patient_name = parts[1].strip()
+                date_str = parts[2].strip()
+                time_str = parts[3].strip()
+                reason = parts[4].strip() if len(parts) > 4 else ""
+                
+                # Find matching doctor
+                for doctor in doctors:
+                    if doctor.full_name() == doctor_name:
+                        doctor.add_appointment(patient_name,date_str,time_str,reason)
+                        count += 1
+                        break
+    except Exception as e:
+        print(f"Warning: Could not load appointments - {e}")
+    
+    return count
 if __name__ =='__main__':
     x = load_patients_data()
    

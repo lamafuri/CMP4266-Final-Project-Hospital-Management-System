@@ -22,7 +22,17 @@ class Doctor(Person):
     def set_speciality(self, new_speciality):
         #ToDo7
         self.__speciality = new_speciality
-
+    def add_appointment(self, patient_name, date, time, reason=""):
+        """Add a simple appointment record to this doctor's list"""
+        appointment = {
+            'patient': patient_name,
+            'date': date,
+            'time': time,
+            'reason': reason or "Consultation"
+        }
+        self.__appointments.append(appointment)
+    def get_appointments(self):
+        return self.__appointments
     def add_patient(self, patient):
         self.__patients.append(patient)
 

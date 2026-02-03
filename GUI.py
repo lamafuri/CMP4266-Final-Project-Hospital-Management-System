@@ -8,7 +8,9 @@ from utility_functions import (
     load_patients_data,
     load_discharged_patients_data,
     update_file,
-    update_patients_list_in_doctor
+    update_patients_list_in_doctor,
+    save_appointment ,
+    load_appointments
 )
 
 class HospitalGUI:
@@ -69,7 +71,7 @@ class HospitalGUI:
 
         doctor_by_name = {doctor.full_name(): doctor for doctor in self.doctors}
         update_patients_list_in_doctor(doctor_by_name, self.patients)
-
+        load_appointments(self.doctors)
     def show_main_menu(self):
         self.clear_frame()
 
@@ -84,8 +86,9 @@ class HospitalGUI:
         tk.Button(self.current_frame, text="5. Reallocate Doctor to Patient", **btn_style ,command=self.open_reallocate_doctor).pack(pady=5)
         tk.Button(self.current_frame, text="6. View Management Reports", **btn_style , command=self.open_management_reports).pack(pady=8)
         tk.Button(self.current_frame, text="7. Update Admin Details", **btn_style ,command=self.open_update_admin).pack(pady=5)
-        tk.Button(self.current_frame, text="8. View Patient Grouped by Family", **btn_style ,command=self.view_pateints_grouped_by_family).pack(pady=5)
-        tk.Button(self.current_frame, text="9. Quit", bg="#f44336", fg="white",font=("Helvetica", 12, "bold"), command=self.quit_application, width=35, pady=10).pack(pady=10)
+        tk.Button(self.current_frame, text="8. Make an appointment for Patient", **btn_style ,command=self.open_make_appointment_form).pack(pady=5)
+        tk.Button(self.current_frame, text="9. View Patient Grouped by Family", **btn_style ,command=self.view_pateints_grouped_by_family).pack(pady=5)
+        tk.Button(self.current_frame, text="10. Quit", bg="#f44336", fg="white",font=("Helvetica", 12, "bold"), command=self.quit_application, width=35, pady=10).pack(pady=10)
 
     # Doctor Management Starts Here
     def open_doctor_management(self):
@@ -268,7 +271,6 @@ class HospitalGUI:
         for idx, pat in enumerate(self.patients, 1):
             symptoms_str = ", ".join(pat.get_symptoms())
             self.patient_tree.insert("", "end",values=(idx, pat.full_name(), pat.get_doctor(), pat.age,pat.mobile, pat.postcode , symptoms_str))
-
 
     def admit_patient(self):
         adm_win = tk.Toplevel(self.root , padx=30 , pady=20)
@@ -539,7 +541,7 @@ class HospitalGUI:
 
         tk.Button(rep_win, text="2. Total Patients per Doctor", **btn_style,command=self.show_patients_per_doctor).pack(pady=8)
 
-        tk.Button(rep_win, text="3. Total Appointments per Doctor", **btn_style,command=lambda: messagebox.showinfo("Report", "Appointments not implemented yet.")).pack(pady=8)
+        tk.Button(rep_win, text="3. Total Appointments per Doctor", **btn_style,command=self.show_appointments_per_doctor).pack(pady=8)
 
         tk.Button(rep_win, text="4. Patients by Illness Type", **btn_style,command=self.show_patients_per_illness).pack(pady=8)
 
@@ -547,6 +549,11 @@ class HospitalGUI:
         text = "Patients per Doctor:\n\n"
         for doc in self.doctors:
             text += f"{doc.full_name()}: {len(doc.get_patients())} patients\n"
+        messagebox.showinfo("Report", text)
+    def show_appointments_per_doctor(self):
+        text = "No. of Appointments per Doctor:\n\n"
+        for doc in self.doctors:
+            text += f"{doc.full_name()}: {len(doc.get_appointments())} appointments\n"
         messagebox.showinfo("Report", text)
     def show_patients_per_illness(self):
         illness_symptoms = set()
@@ -650,6 +657,58 @@ class HospitalGUI:
     def load_family_tree(self , family):
         for idx , pat in enumerate(family , 1):
             self.family_tree.insert("","end",values=(idx , pat.full_name() ,pat.age ,pat.get_doctor() , pat.mobile , pat.postcode))
+    
+    def open_make_appointment_form(self):
+        win = tk.Toplevel(self.root)
+        win.title("Schedule New Appointment")
+        win.geometry("480x380")
+
+        tk.Label(win, text="Doctor full name:").pack(pady=(20,5))
+        doctor_entry = tk.Entry(win, width=40)
+        doctor_entry.pack()
+
+        tk.Label(win, text="Patient full name:").pack(pady=(15,5))
+        patient_entry = tk.Entry(win, width=40)
+        patient_entry.pack()
+
+        tk.Label(win, text="Date (YYYY-MM-DD):").pack(pady=(15,5))
+        date_entry = tk.Entry(win, width=40)
+        date_entry.pack()
+
+        tk.Label(win, text="Time (HH:MM):").pack(pady=(15,5))
+        time_entry = tk.Entry(win, width=40)
+        time_entry.pack()
+
+        tk.Label(win, text="Reason (optional):").pack(pady=(15,5))
+        reason_entry = tk.Entry(win, width=40)
+        reason_entry.pack()
+
+        def save():
+            doctor_full_name = doctor_entry.get().strip()
+            patient_name     = patient_entry.get().strip()
+            date_str         = date_entry.get().strip()
+            time_str         = time_entry.get().strip()
+            reason           = reason_entry.get().strip()
+
+            if not (doctor_full_name and patient_name and date_str and time_str):
+                messagebox.showwarning("Missing fields", "Doctor, Patient, Date and Time are required.")
+                return
+            doctor_obj = None
+            for doc in self.doctors:
+                if doc.full_name() == doctor_full_name:
+                    doctor_obj = doc
+                    break
+
+            if not doctor_obj:
+                messagebox.showerror("Not found", f"Doctor '{doctor_full_name}' not found in system.")
+                return
+
+            doctor_obj.add_appointment(patient_name,date_str,time_str,reason)
+            save_appointment(doctor_full_name, patient_name, date_str, time_str, reason)
+            messagebox.showinfo("Success", f"Appointment saved for Dr. {doctor_full_name}")
+            win.destroy()
+
+        tk.Button(win, text="Save Appointment", command=save,bg="#4CAF50", fg="white", font=("Helvetica", 11, "bold")).pack(pady=25)
     # Quit
     def quit_application(self):
         """Properly close the application"""
