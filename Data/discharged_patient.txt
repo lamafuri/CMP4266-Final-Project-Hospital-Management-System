@@ -2,3 +2,5 @@ Leo,Clark,33,447900008111,PL1 3BJ,Emma Roberts
 Oliver,Thompson,30,447900005111,NG1 6AA,Rebecca Khan
 Noah,Smith,19,447900002113,EC1A 1BB,Sarah Collins
 Henry,Taylor,60,447900010111,M1 2WD,Thomas Green
+Furi,Lama,18,9749214495,44600,None
+Grace,Hall,51,447900009112,OX1 4BT,John Smith
