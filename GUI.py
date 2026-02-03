@@ -85,7 +85,7 @@ class HospitalGUI:
         tk.Button(self.current_frame, text="6. View Management Reports", **btn_style , command=self.open_management_reports).pack(pady=8)
         tk.Button(self.current_frame, text="7. Update Admin Details", **btn_style ,command=self.open_update_admin).pack(pady=5)
         tk.Button(self.current_frame, text="8. View Patient Grouped by Family", **btn_style ,command=self.view_pateints_grouped_by_family).pack(pady=5)
-        tk.Button(self.current_frame, text="9. Quit", bg="#f44336", fg="white",font=("Helvetica", 12, "bold"), width=35, pady=10).pack(pady=10)
+        tk.Button(self.current_frame, text="9. Quit", bg="#f44336", fg="white",font=("Helvetica", 12, "bold"), command=self.quit_application, width=35, pady=10).pack(pady=10)
 
     # Doctor Management Starts Here
     def open_doctor_management(self):
@@ -459,7 +459,6 @@ class HospitalGUI:
 
         tk.Button(rea_win, text="Reallocate Selected", command=self.perform_reallocate ,bg="#4CAF50" ,fg='white').grid(row=2, column=0, columnspan=2, pady=20)
 
-
     def refresh_assigned_tree(self):
         self.assigned_tree.delete(*self.assigned_tree.get_children())
         assigned = [p for p in self.patients if p.get_doctor() != 'None']
@@ -611,7 +610,12 @@ class HospitalGUI:
     def load_family_tree(self , family):
         for idx , pat in enumerate(family , 1):
             self.family_tree.insert("","end",values=(idx , pat.full_name() ,pat.age ,pat.get_doctor() , pat.mobile , pat.postcode))
-        
+    # Quit
+    def quit_application(self):
+        """Properly close the application"""
+        if messagebox.askyesno("Confirm Exit", "Are you sure you want to quit?"):
+            self.root.quit()          # Stops the mainloop
+            self.root.destroy()       # Destroys the window and frees resources
 if __name__ == "__main__":
     root = tk.Tk()
     app = HospitalGUI(root)
