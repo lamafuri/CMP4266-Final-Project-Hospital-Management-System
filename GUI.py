@@ -77,14 +77,15 @@ class HospitalGUI:
 
         btn_style = {"font": ("Helvetica", 12), "width": 35, "pady": 10}
 
-        tk.Button(self.current_frame, text="1. Doctor Management", **btn_style,command=self.open_doctor_management).pack(pady=8)
-        tk.Button(self.current_frame, text="2. Patient Management", **btn_style , command=self.open_patient_management).pack(pady=8)
-        tk.Button(self.current_frame, text="3. View Discharged Patients", **btn_style , command=self.view_discharged_patients).pack(pady=8)
-        tk.Button(self.current_frame, text="4. Assign Doctor to Patient", **btn_style , command=self.open_assign_doctor).pack(pady=8)
-        tk.Button(self.current_frame, text="5. Reallocate Doctor to Patient", **btn_style ,command=self.open_reallocate_doctor).pack(pady=8)
+        tk.Button(self.current_frame, text="1. Doctor Management", **btn_style,command=self.open_doctor_management).pack(pady=5)
+        tk.Button(self.current_frame, text="2. Patient Management", **btn_style , command=self.open_patient_management).pack(pady=5)
+        tk.Button(self.current_frame, text="3. View Discharged Patients", **btn_style , command=self.view_discharged_patients).pack(pady=5)
+        tk.Button(self.current_frame, text="4. Assign Doctor to Patient", **btn_style , command=self.open_assign_doctor).pack(pady=5)
+        tk.Button(self.current_frame, text="5. Reallocate Doctor to Patient", **btn_style ,command=self.open_reallocate_doctor).pack(pady=5)
         tk.Button(self.current_frame, text="6. View Management Reports", **btn_style , command=self.open_management_reports).pack(pady=8)
-        tk.Button(self.current_frame, text="7. Update Admin Details", **btn_style ,command=self.open_update_admin).pack(pady=8)
-        tk.Button(self.current_frame, text="8. Quit", bg="#f44336", fg="white",font=("Helvetica", 12, "bold"), width=35, pady=10).pack(pady=30)
+        tk.Button(self.current_frame, text="7. Update Admin Details", **btn_style ,command=self.open_update_admin).pack(pady=5)
+        tk.Button(self.current_frame, text="8. View Patient Grouped by Family", **btn_style ,command=self.view_pateints_grouped_by_family).pack(pady=5)
+        tk.Button(self.current_frame, text="9. Quit", bg="#f44336", fg="white",font=("Helvetica", 12, "bold"), width=35, pady=10).pack(pady=10)
 
     # Doctor Management Starts Here
     def open_doctor_management(self):
@@ -568,6 +569,49 @@ class HospitalGUI:
             messagebox.showinfo("Success", "Admin details updated.")
 
         tk.Button(upd_win, text="Update", command=save).pack(pady=20)
+
+    def view_pateints_grouped_by_family(self):
+        fam_win = tk.Toplevel(self.root)
+        fam_win.title("Patients Grouped by Family")
+        fam_win.geometry("1000x600")
+        tk.Label(fam_win,text="Patients Grouped by Family (Surname)",font=("Helvetica", 16, "bold"),pady=10).pack()
+
+        # ── Add scrollable container ──
+        canvas = tk.Canvas(fam_win)
+        scrollbar = ttk.Scrollbar(fam_win, orient="vertical", command=canvas.yview)
+        scrollable_frame = tk.Frame(canvas)
+        scrollable_frame.bind("<Configure>",lambda e: canvas.configure(scrollregion=canvas.bbox("all")))
+        canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
+        canvas.configure(yscrollcommand=scrollbar.set)
+        canvas.pack(side="left", fill="both", expand=True)
+        scrollbar.pack(side="right", fill="y")
+
+        sorted_surnames = sorted(self.grouped_patients.keys())
+        columns = ('ID','Full Name','Age','Doctor','Mobile','Postcode')
+
+        for surname in sorted_surnames:
+            family = self.grouped_patients[surname]
+            if not family:
+                continue
+            tk.Label(scrollable_frame,text=f"Family: {surname.upper()} ({len(family)} member{'s' if len(family)>1 else ''})",font=("Helvetica", 12, "bold"),anchor="w",padx=20).pack(fill="x", pady=(15, 5))
+            self.family_tree = ttk.Treeview(scrollable_frame , columns=columns , show='headings' , height=len(family))
+            for col in columns:
+                self.family_tree.heading(col , text=col)
+                self.family_tree.column(col ,anchor="center")
+            
+            self.family_tree.column('ID' , width=50)
+            self.family_tree.column('Full Name' , width=150)
+            self.family_tree.column('Age' , width=50)
+            self.family_tree.column('Doctor' , width=150)
+            self.family_tree.column('Mobile' , width=150)
+            self.family_tree.column('Postcode' , width=150)
+            
+            self.load_family_tree(family)
+            self.family_tree.pack(pady=20, padx=20, fill="x")   # changed to fill="x" so it doesn't force expand vertically
+    def load_family_tree(self , family):
+        for idx , pat in enumerate(family , 1):
+            self.family_tree.insert("","end",values=(idx , pat.full_name() ,pat.age ,pat.get_doctor() , pat.mobile , pat.postcode))
+        
 if __name__ == "__main__":
     root = tk.Tk()
     app = HospitalGUI(root)
