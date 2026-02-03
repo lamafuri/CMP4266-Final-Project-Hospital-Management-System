@@ -43,7 +43,8 @@ def main():
         print(' 5- Reallocate Doctor to Patient')
         print(' 6- View Management Report')
         print(' 7- Update admin detais')
-        print(' 8- Quit')
+        print(" 8- View Grouped Patient's By Family")
+        print(' 9- Quit')
 
         # get the option
         op = input('Option: ')
@@ -99,8 +100,9 @@ def main():
         elif op == '7':
             # 7- Update admin detais
             admin.update_details()
-
         elif op == '8':
+            admin.view_grouped_patients_by_family(grouped_patients)
+        elif op == '9':
             # 8 - Quit
             #ToDo5
             print("Exited Successfully !")

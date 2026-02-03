@@ -456,6 +456,28 @@ class Admin:
         except Exception as e:
             print("Error Updating Admin FIle: ",e)
 
+    def view_grouped_patients_by_family(self , grouped_patients):
+        """
+        Display all patients grouped by family (surname).
+        Uses the grouped_patients dictionary: {surname: [patient, patient, ...]}
+        """
+        print('-'*60)
+        print("VIEW PATIENTS BY FAMILY".center(60 , " "))
+        print('-'*60)
+        sorted_surnames = sorted(grouped_patients.keys())
+        for surname in sorted_surnames:
+            family = grouped_patients[surname]
+            if not family:
+                continue
+            print(f"\nFamily: {surname.upper()} ({len(family)} member{'s' if len(family) > 1 else ''})")
+            print("-" * 98)
+            print('ID |          Full Name           |      Doctor`s Full Name      | Age |    Mobile     | Postcode ')
+            print("-" * 98)
+
+            for idx, patient in enumerate(family, 1):
+                print(f"{idx:<3}|{patient}")
+            print()
+
 if __name__ =='__main__': 
     my = Admin.load_admin_data()
     print(my.get_username() , my.get_password())
