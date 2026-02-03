@@ -38,9 +38,13 @@ def load_patients_data():
             row = file.readline()
             while row:
                 list_of_row_values = row.split(',')
-                first_name , surname , age , mobile , postcode , doctor_full_name = list_of_row_values
+                first_name , surname , age , mobile , postcode , doctor_full_name , symptoms = list_of_row_values
                 current_patient = Patient(first_name , surname , age , mobile , postcode)
                 current_patient.link(doctor_full_name.strip())
+                symptoms = symptoms.split('|')
+                symptoms[-1] = symptoms[-1].strip()
+                for symptom in symptoms:
+                    current_patient.add_symptom(symptom)
                 patients.append(current_patient)
                 surname = current_patient.get_surname()
                 grouped_patients.setdefault(surname,[]).append(current_patient)
@@ -61,9 +65,13 @@ def load_discharged_patients_data():
             row = file.readline()
             while row:
                 list_of_row_values = row.split(',')
-                first_name , surname , age , mobile , postcode , doctor_full_name = list_of_row_values
+                first_name , surname , age , mobile , postcode , doctor_full_name , symptoms = list_of_row_values
                 current_patient = Patient(first_name , surname , age , mobile , postcode)
                 current_patient.link(doctor_full_name.strip())
+                symptoms = symptoms.split('|')
+                symptoms[-1] = symptoms[-1].strip()
+                for symptom in symptoms:
+                    current_patient.add_symptom(symptom)
                 discharged_patients.append(current_patient)
                 row = file.readline()
 
@@ -83,5 +91,4 @@ def update_patients_list_in_doctor(doctor_by_name , patients):
 
 if __name__ =='__main__':
     x = load_patients_data()
-    print(x)
    

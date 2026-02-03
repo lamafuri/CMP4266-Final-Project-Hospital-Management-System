@@ -208,6 +208,12 @@ class Admin:
         mobile = input("Enter the patient's mobile number: ")
         postcode = input("Enter the patient's address post code: ")
         new_patient = Patient(first_name , surname , age , mobile , postcode)
+        print("\nEnter symptoms (one per line, empty line and enter to finish):")
+        while True:
+            symp = input("Symptom: ").strip()
+            if not symp:
+                break
+            new_patient.add_symptom(symp)
         patients.append(new_patient)
         update_file(patients ,'patient.txt')
 
@@ -218,7 +224,7 @@ class Admin:
             patients (list<Patients>): list of all the active patients
         """
         print("-----View Patients-----")
-        print('ID |          Full Name           |      Doctor`s Full Name      | Age |    Mobile     | Postcode ')
+        print('ID |          Full Name           |      Doctor`s Full Name      | Age |    Mobile     | Postcode |      Symptoms ')
         #ToDo10
         self.view(patients)
 
@@ -412,7 +418,7 @@ class Admin:
             #ToDo16
             print("Invalid operation! Please enter a valid operation")
 
-    def management_reports(self , doctors):
+    def management_reports(self , doctors , patients):
         print("\t1. View total number of Doctors")
         print("\t2. View total number of Patients per Doctor")
         print("\t3. View total number of appointments per Dcotor")
@@ -429,7 +435,21 @@ class Admin:
             pass
         elif op == '4':
             # Patient based on illness
-            pass
+            illness_symptoms = set()
+            for patient in patients:
+                symptoms = patient.get_symptoms()
+                for symptom in symptoms:
+                    illness_symptoms.add(symptom)
+            illness_count = {}
+            for s in illness_symptoms:
+                illness_count[s] = 0
+            for pat in patients:
+                for symp in pat.get_symptoms():
+                    illness_count[symp] +=1
+            print("Patient Count Based on their symptoms:")
+            print("-"*38)
+            for k ,v in illness_count.items():
+                print(f"{k:<20} : {v}")
         else:
             print("Ivalid Input ! Enter 1 ,2 ,3 or 4")
 
@@ -486,6 +506,6 @@ if __name__ =='__main__':
     # my.assign_doctor_to_patient([Patient("Furi","Lama",18, "9749214495","22334")] ,[Doctor("Furi","Lama","Surgeon")] )
     # my.discharge([Patient("Furi","Lama",18, "9749214495","22334")] , [])
     # my.update_details()
-    my.update_details()
+    # my.management_reports()
 
 

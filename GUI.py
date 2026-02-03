@@ -238,18 +238,19 @@ class HospitalGUI:
         tk.Label(pat_win, text="Patient Management", font=("Helvetica", 16, "bold")).pack(pady=10)
 
         # Treeview for patients (used in View & Discharge)
-        columns = ("ID", "Full Name", "Doctor", "Age", "Mobile", "Postcode")
+        columns = ("ID", "Full Name", "Doctor", "Age", "Mobile", "Postcode","Symptoms")
         self.patient_tree = ttk.Treeview(pat_win, columns=columns, show="headings", height=15)
         for col in columns:
             self.patient_tree.heading(col, text=col)
             self.patient_tree.column(col,anchor="center")
         
-        self.patient_tree.column("ID", width=50)
-        self.patient_tree.column("Full Name", width=220)
-        self.patient_tree.column("Doctor", width=180)
-        self.patient_tree.column("Age", width=60)
+        self.patient_tree.column("ID", width=40)
+        self.patient_tree.column("Full Name", width=150)
+        self.patient_tree.column("Doctor", width=150)
+        self.patient_tree.column("Age", width=40)
         self.patient_tree.column("Mobile", width=120)
         self.patient_tree.column("Postcode", width=100)
+        self.patient_tree.column("Symptoms" , width=300 , anchor="w")
         
         self.patient_tree.pack(pady=10, padx=20, fill="both", expand=True)
         self.refresh_patient_tree()
@@ -265,7 +266,8 @@ class HospitalGUI:
         """Clear and repopulate patient treeview"""
         self.patient_tree.delete(*self.patient_tree.get_children())
         for idx, pat in enumerate(self.patients, 1):
-            self.patient_tree.insert("", "end",values=(idx, pat.full_name(), pat.get_doctor(), pat.age,pat.mobile, pat.postcode))
+            symptoms_str = ", ".join(pat.get_symptoms())
+            self.patient_tree.insert("", "end",values=(idx, pat.full_name(), pat.get_doctor(), pat.age,pat.mobile, pat.postcode , symptoms_str))
 
 
     def admit_patient(self):
@@ -297,6 +299,11 @@ class HospitalGUI:
         pc_entry = tk.Entry(adm_win)
         pc_entry.grid(row=4, column=1, sticky='ew')
 
+        tk.Label(adm_win, text="Symptoms:").grid(row=5, column=0, sticky='e')
+        symp_entry = tk.Entry(adm_win)
+        symp_entry.grid(row=5, column=1, sticky='ew')
+
+
         def save():
             try:
                 first_name = fn_entry.get().strip()
@@ -304,13 +311,20 @@ class HospitalGUI:
                 age        = int(age_entry.get().strip())
                 mobile     = mob_entry.get().strip()
                 postcode   = pc_entry.get().strip()
+                symptoms   = symp_entry.get().strip()
 
                 if not all([first_name, surname, mobile, postcode]):
                     raise ValueError("Please fill all fields correctly.")
                 if age <=0:
                     raise ValueError("Age must be positive.")
+                if not symptoms:
+                    symptoms = ["None"]
+                else:
+                    symptoms = symptoms.split(',')
 
                 new_pat = Patient(first_name, surname, age, mobile, postcode)
+                for symp in symptoms:
+                    new_pat.add_symptom(symp)
                 self.patients.append(new_pat)
                 self.grouped_patients.setdefault(surname, []).append(new_pat)
                 update_file(self.patients, 'patient.txt')
@@ -355,13 +369,21 @@ class HospitalGUI:
         view_win.title("Discharged Patients")
         view_win.geometry("1000x600")
 
-        columns = ("ID", "Full Name", "Doctor", "Age", "Mobile", "Postcode")
+        columns = ("ID", "Full Name", "Doctor", "Age", "Mobile", "Postcode" , "Symptoms")
         tree = ttk.Treeview(view_win, columns=columns, show="headings", height=20)
         for col in columns:
             tree.heading(col, text=col)
-            tree.column(col, width=150, anchor="center")
+            tree.column(col, anchor="center")
+        tree.column("ID", width=40)
+        tree.column("Full Name", width=150)
+        tree.column("Doctor", width=150)
+        tree.column("Age", width=40)
+        tree.column("Mobile", width=120)
+        tree.column("Postcode", width=100)
+        tree.column("Symptoms" , width=300 , anchor="w")
         for i, pat in enumerate(self.discharged_patients, 1):
-            tree.insert("", "end", values=(i, pat.full_name(), pat.get_doctor(), pat.age, pat.mobile, pat.postcode))
+            symptoms_str = ", ".join(pat.get_symptoms())
+            tree.insert("", "end", values=(i, pat.full_name(), pat.get_doctor(), pat.age, pat.mobile, pat.postcode , symptoms_str))
         tree.pack(pady=10, padx=20, fill="both", expand=True)
 
     # Assign Doctor
@@ -372,12 +394,14 @@ class HospitalGUI:
 
         # Patients without doctor
         tk.Label(ass_win, text="Unassigned Patients",font=("Helvetica", 18, "bold")).grid(row=0, column=0, padx=20 , pady=18)
-        pat_columns = ("ID", "Full Name")
+        pat_columns = ("ID", "Full Name","Symptoms")
         self.unassigned_tree = ttk.Treeview(ass_win, columns=pat_columns, show="headings", height=20)
         self.unassigned_tree.heading("ID",text="ID")
         self.unassigned_tree.heading("Full Name",text="Full Name")
-        self.unassigned_tree.column("ID",width=100 , anchor='center')
-        self.unassigned_tree.column("Full Name",width=250)
+        self.unassigned_tree.heading("Symptoms",text="Symptoms")
+        self.unassigned_tree.column("ID",width=40 , anchor='center')
+        self.unassigned_tree.column("Full Name",width=150 , anchor='w')
+        self.unassigned_tree.column("Symptoms",width=300 , anchor='w')
         self.refresh_unassigned_tree()
         self.unassigned_tree.grid(row=1, column=0, padx=20)
 
@@ -385,9 +409,9 @@ class HospitalGUI:
         tk.Label(ass_win, text="Doctors" ,font=("Helvetica", 18, "bold")).grid(row=0, column=1, padx=20 , pady=18)
         doc_columns = ("ID", "Full Name", "Speciality")
         self.doc_tree_ass = ttk.Treeview(ass_win, columns=doc_columns, show="headings", height=20)
-        self.doc_tree_ass.column("ID" , width=100 , anchor='center')
-        self.doc_tree_ass.column("Full Name" , width=250)
-        self.doc_tree_ass.column("Speciality" , width=250)
+        self.doc_tree_ass.column("ID" , width=40 , anchor='center')
+        self.doc_tree_ass.column("Full Name" , width=150)
+        self.doc_tree_ass.column("Speciality" , width=150)
         for col in doc_columns:
             self.doc_tree_ass.heading(col, text=col)
         self.refresh_doc_tree_ass()
@@ -399,7 +423,8 @@ class HospitalGUI:
         self.unassigned_tree.delete(*self.unassigned_tree.get_children())
         unassigned = [p for p in self.patients if p.get_doctor() == 'None']
         for i, pat in enumerate(unassigned, 1):
-            self.unassigned_tree.insert("", "end", values=(i, pat.full_name()))
+            symptoms_str = ", ".join(pat.get_symptoms())
+            self.unassigned_tree.insert("", "end", values=(i, pat.full_name() , symptoms_str))
 
     def refresh_doc_tree_ass(self):
         self.doc_tree_ass.delete(*self.doc_tree_ass.get_children())
@@ -516,14 +541,29 @@ class HospitalGUI:
 
         tk.Button(rep_win, text="3. Total Appointments per Doctor", **btn_style,command=lambda: messagebox.showinfo("Report", "Appointments not implemented yet.")).pack(pady=8)
 
-        tk.Button(rep_win, text="4. Patients by Illness Type", **btn_style,command=lambda: messagebox.showinfo("Report", "Illness types not implemented yet.")).pack(pady=8)
+        tk.Button(rep_win, text="4. Patients by Illness Type", **btn_style,command=self.show_patients_per_illness).pack(pady=8)
 
     def show_patients_per_doctor(self):
         text = "Patients per Doctor:\n\n"
         for doc in self.doctors:
             text += f"{doc.full_name()}: {len(doc.get_patients())} patients\n"
         messagebox.showinfo("Report", text)
-    
+    def show_patients_per_illness(self):
+        illness_symptoms = set()
+        for patient in self.patients:
+            symptoms = patient.get_symptoms()
+            for symptom in symptoms:
+                illness_symptoms.add(symptom)
+        illness_count = {}
+        for s in illness_symptoms:
+            illness_count[s] = 0
+        for pat in self.patients:
+            for symp in pat.get_symptoms():
+                illness_count[symp] +=1
+        text = "Patients per Illness Type:\n\n"
+        for k,v in illness_count.items():
+            text += f"{k:<20}: {v} patients\n"
+        messagebox.showinfo("Report", text)
     # Update Admin Details
     def open_update_admin(self):
         upd_win = tk.Toplevel(self.root)

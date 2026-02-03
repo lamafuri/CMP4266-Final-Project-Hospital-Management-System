@@ -96,7 +96,7 @@ def main():
 
         elif op == '6':
             #6 - View Management Report
-            admin.management_reports(doctors)
+            admin.management_reports(doctors , patients)
         elif op == '7':
             # 7- Update admin detais
             admin.update_details()
