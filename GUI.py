@@ -532,7 +532,7 @@ class HospitalGUI:
 
         tk.Button(rep_win, text="2. Total Patients per Doctor", **btn_style,command=self.show_patients_per_doctor).pack(pady=8)
 
-        tk.Button(rep_win, text="3. Total Appointments per Doctor", **btn_style,command=self.show_appointments_per_doctor).pack(pady=8)
+        tk.Button(rep_win, text="3. Total Appointments per month per Doctor", **btn_style,command=self.show_appointments_per_doctor).pack(pady=8)
 
         tk.Button(rep_win, text="4. Patients by Illness Type", **btn_style,command=self.show_patients_per_illness).pack(pady=8)
 
