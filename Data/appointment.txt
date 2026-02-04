@@ -5,4 +5,5 @@ Sarah Collins,Liam Smith,2026-02-06,11:00,Back Pain Assessment
 Sarah Collins,Olivia Smith,2026-02-06,11:30,Headache Follow-up
 James Patel,Ava Wilson,2026-02-07,09:00,Fatigue Assessment
 James Patel,Ethan Wilson,2026-02-07,09:30,Hypertension Check
+James Patel,Ethan Wilson,2026-07-07,09:30,Hypertension Check
 Test Doctor,Furi Lama,2026-02-20,14:00,Follow-up

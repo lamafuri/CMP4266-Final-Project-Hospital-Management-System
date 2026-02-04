@@ -542,9 +542,18 @@ class HospitalGUI:
             text += f"{doc.full_name()}: {len(doc.get_patients())} patients\n"
         messagebox.showinfo("Report", text)
     def show_appointments_per_doctor(self):
-        text = "No. of Appointments per Doctor:\n\n"
+        text = "No. of Appointments per month per Doctor:\n\n"
+        months_name_list = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
         for doc in self.doctors:
-            text += f"{doc.full_name()}: {len(doc.get_appointments())} appointments\n"
+            appoint_per_month = {}
+            appointments = doc.get_appointments()
+            if len(appointments)>0:
+                for app in appointments:
+                    month_num = int(app['date'].split("-")[1])
+                    month = months_name_list[month_num-1]
+                    appoint_per_month[month] = appoint_per_month.setdefault(month , 0)+1
+                for k, v in appoint_per_month.items():
+                    text += f"{doc.full_name()} : {k} : {v} appointments\n"
         messagebox.showinfo("Report", text)
     def show_patients_per_illness(self):
         illness_symptoms = set()

@@ -422,7 +422,7 @@ class Admin:
     def management_reports(self , doctors , patients):
         print("\t1. View total number of Doctors")
         print("\t2. View total number of Patients per Doctor")
-        print("\t3. View total number of appointments per Dcotor")
+        print("\t3. View total number of appointments per month per Dcotor")
         print("\t4. View total number of Patients based on illness types")
         op = input("Enter the operation (1,2,3,4): ")
         if(op == '1'):
@@ -433,11 +433,22 @@ class Admin:
                 print(f"\t{doctor.full_name()} has : {len(doctor.get_patients())} patients")
         elif op == '3':
             # appointent per doctor
-            print("Total Number of appointment's per Doctor")
+            print("Total Number of appointment's per month per Doctor")
             print("-"*40)
-            print(f"{'Doctor Name':^16}| No. of Appointments")
+            print(f"{'Doctor Name':^16}|  Month  | No. of Appointments")
+            months_name_list = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
             for doc in doctors:
-                print(f"{doc.full_name():^16}|{len(doc.get_appointments()):^16}")
+                appoint_per_month = {}
+                appointments = doc.get_appointments()
+                if len(appointments)>0:
+                    for ap in appointments:
+                        month_num = ap['date'].split('-')[1]
+                        month = months_name_list[int(month_num)-1]
+                        appoint_per_month[month] = appoint_per_month.setdefault(month , 0)+1
+                    for k , v in appoint_per_month.items():
+                        print(f"{doc.full_name():^16}|{k:^9}|{v:^16}")
+                        
+                    # print(appointments)
 
         elif op == '4':
             # Patient based on illness
