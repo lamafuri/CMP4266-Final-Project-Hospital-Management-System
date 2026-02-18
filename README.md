@@ -33,7 +33,6 @@ Manages **doctors**, **patients**, **appointments**, **symptoms**, **discharged 
 
 ## 🖥️ Screenshots
 
-*(Add 3–5 real screenshots here when ready)*
 
 | Login Screen                  | Main Menu                          | Patient Management                |
 |-------------------------------|------------------------------------|-----------------------------------|
